@@ -1,0 +1,12 @@
+Source: ros-groovy-visp
+Section: misc
+Priority: extra
+Maintainer: Thomas Moulard <thomas.moulard@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), cmake
+Homepage: http://www.ros.org/wiki/visp
+Standards-Version: 3.9.2
+
+Package: ros-groovy-visp
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+Description: ViSP, standing for Visual Servoing Platform, is unique. This software is a complete cross-platform solution that allows prototyping and developing applications in visual tracking and visual servoing. ViSP can be useful in robotics, computer vision, augmented reality and computer animation.
