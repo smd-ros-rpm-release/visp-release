@@ -1,0 +1,25 @@
+From 6aa6456b83fc6eaaeb3b52610e3f995da6cb3cec Mon Sep 17 00:00:00 2001
+From: Fabien Spindler <Fabien.Spindler@inria.fr>
+Date: Fri, 22 Nov 2013 15:26:05 +0100
+Subject: [PATCH 3/3] Remove testing
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1735744..1b2e4fe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2133,7 +2133,7 @@ install(FILES package.xml DESTINATION share/visp)
+ # We use CDash set through CTestConfig.cmake file
+ # Dashboards are sent to http://cdash.irisa.fr/CDash/index.php?project=ViSP
+ #----------------------------------------------------------------------
+-ENABLE_TESTING()
++#ENABLE_TESTING()
+ INCLUDE(Dart)
+ MARK_AS_ADVANCED(DART_ROOT)
+ 
+-- 
+1.8.1.2
+
