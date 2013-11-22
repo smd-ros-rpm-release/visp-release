@@ -691,7 +691,7 @@ IF(USE_X11)
   SET(VISP_HAVE_X11 TRUE)  # for header vpConfig.h
   SET(VISP_HAVE_X11_FOUND "yes")  # for ViSP-third-party.txt
   LIST(APPEND VISP_EXTERN_INCLUDE_DIRS ${X11_INCLUDE_DIR})
-  LIST(APPEND VISP_EXTERN_LIBRARIES ${X11_LIBRARIES} m)
+  LIST(APPEND VISP_EXTERN_LIBRARIES ${X11_LIBRARIES} -lm)
   #MESSAGE("X11: ${X11_LIBRARIES}")
 ENDIF(USE_X11)
 
@@ -2124,16 +2124,11 @@ ELSE()
 ENDIF()
 
 #----------------------------------------------------------------------
-# Install catkin package.xml
-#----------------------------------------------------------------------
-install(FILES package.xml DESTINATION share/visp)
-
-#----------------------------------------------------------------------
 # For Dart server and tests 
 # We use CDash set through CTestConfig.cmake file
 # Dashboards are sent to http://cdash.irisa.fr/CDash/index.php?project=ViSP
 #----------------------------------------------------------------------
-#ENABLE_TESTING()
+ENABLE_TESTING()
 INCLUDE(Dart)
 MARK_AS_ADVANCED(DART_ROOT)
 
