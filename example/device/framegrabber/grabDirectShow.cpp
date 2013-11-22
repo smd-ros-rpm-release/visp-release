@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: grabDirectShow.cpp 3619 2012-03-09 17:28:57Z fspindle $
+ * $Id: grabDirectShow.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -252,11 +252,7 @@ main(int argc, const char ** argv)
         sprintf(buf, opath.c_str(), i);
         std::string filename(buf);
         std::cout << "Write: " << filename << std::endl;
-#ifdef GRAB_COLOR
-        vpImageIo::writePPM(I, filename);
-#else
-        vpImageIo::writePGM(I, filename);
-#endif
+        vpImageIo::write(I, filename);
       }
       tend = vpTime::measureTimeMs();
       tloop = tend - tbegin;

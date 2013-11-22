@@ -1,9 +1,9 @@
 /****************************************************************************
 *
-* $Id: vpPoseLowe.cpp 3530 2012-01-03 10:52:12Z fspindle $
+* $Id: vpPoseLowe.cpp 4276 2013-06-25 12:36:48Z fspindle $
 *
 * This file is part of the ViSP software.
-* Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+* Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
 * 
 * This software is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -281,11 +281,8 @@ void	fcn (int m, int n, double *xc, double *fvecc, double *jac, int ldfjac, int 
 it consider the minimization of a residual using
 the levenberg marquartd approach.
 
-The approach has been proposed by D.G Lowe in 1992 paper
+The approach has been proposed by D.G Lowe in 1992 paper \cite Lowe92a.
 
-D.G. Lowe. --
-Robust model-based motion tracking through the integration of search
-and estimation. -- Int. J. of Computer Vision, 8(2):113--122, 1992.
 */
 void
 vpPose::poseLowe(vpHomogeneousMatrix & cMo)

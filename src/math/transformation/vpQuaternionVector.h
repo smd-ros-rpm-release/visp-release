@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpQuaternionVector.h 3652 2012-03-27 12:57:23Z fspindle $
+ * $Id: vpQuaternionVector.h 4317 2013-07-17 09:40:17Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,7 +67,7 @@
   A quaternion is defined by four values: \f${\bf q} = (x, y, z, w)\f$.
 
   This class allows to compute a quaternion from a rotation matrix
-  using either vpQuaternionVector(const vpRotationMatrix &) contructor
+  using either vpQuaternionVector(const vpRotationMatrix &) constructor
   or buildFrom() method.
 
   It also defines common operations on a quaternion such as:

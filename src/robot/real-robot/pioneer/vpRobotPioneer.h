@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpRobotPioneer.h 3778 2012-06-06 14:12:07Z fspindle $
+ * $Id: vpRobotPioneer.h 4317 2013-07-17 09:40:17Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,7 +67,7 @@ class VISP_EXPORT vpRobotPioneer: public vpRobot, public vpPioneer, public ArRob
 private: /* Not allowed functions. */
 
   /*!
-    Copy contructor not allowed.
+    Copy constructor not allowed.
    */
   vpRobotPioneer(const vpRobotPioneer &robot);
 
@@ -98,16 +98,6 @@ private: // Set as private since not implemented
   */
   void get_fJe(vpMatrix & /*fJe*/) {} ;
 
-  /*!
-    Get a displacement expressed in the joint space between two successive position control.
-    \warning Not implemented.
-  */
-  void getArticularDisplacement(vpColVector  & /*qdot*/) {};
-  /*!
-    Get a displacement expressed in the camera frame between two successive position control.
-    \warning Not implemented.
-  */
-  void getCameraDisplacement(vpColVector & /*v*/) {};
   /*!
     Get a displacement (frame as to ve specified) between two successive position control.
     \warning Not implemented.

@@ -3,7 +3,7 @@
  * $Id: vpFeatureMomentImpl.h 3317 2011-09-06 14:14:47Z fnovotny $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -53,7 +53,7 @@
 
   \brief Functionality computation for 2D rotation/translation/scale non-symmetric invariant moment feature. Computes the interaction matrix associated with vpMomentCInvariant.
 
-  The interaction matrix for the moment feature can be deduced from [1] "Point-based and region-based image moments for visual servoing of planar objects" by Omar Tahri and Francois Chaumette, equations (9).
+  The interaction matrix for the moment feature can be deduced from  \cite Tahri05z, equations (9).
   To do so, one must derive them and obtain a combination of interaction matrices by using (1).
   It allows to compute the interaction matrix for \f$ c_i, i \in [1..10] \f$.
 
@@ -171,7 +171,7 @@ class vpMomentDatabase;
 
   \brief Functionality computation for 2D rotation/translation/scale non-symmetric invariant moment feature. Computes the interaction matrix associated with vpMomentCInvariant.
 
-  The interaction matrix for the moment feature can be deduced from [1] "Point-based and region-based image moments for visual servoing of planar objects" by Omar Tahri and Francois Chaumette, equations (9).
+  The interaction matrix for the moment feature can be deduced from \cite Tahri05z, equations (9).
   To do so, one must derive them and obtain a combination of interaction matrices by using (1).
   It allows to compute the interaction matrix for \f$ c_i, i \in [1..10] \f$.
 

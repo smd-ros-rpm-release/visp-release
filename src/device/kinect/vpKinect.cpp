@@ -1,10 +1,10 @@
 /****************************************************************************
  *
- * $Id: vpKinect.cpp 3747 2012-05-30 07:39:39Z fspindle $
+ * $Id: vpKinect.cpp 4329 2013-07-20 07:06:49Z fspindle $
  *
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -102,10 +102,10 @@ void vpKinect::start(vpKinect::vpDMResolution res)
 		wd = 640;
 	}
 
-#ifdef VISP_HAVE_ACCESS_TO_NAS
+#if defined(VISP_HAVE_ACCESS_TO_NAS) && defined(VISP_HAVE_XML2)
   	vpXmlParserCamera cameraParser;
   	char cameraXmlFile[FILENAME_MAX];
-  	sprintf(cameraXmlFile, "/udd/fspindle/Viper850/Viper850-code/include/const_camera.xml");
+    sprintf(cameraXmlFile, "/udd/fspindle/robot/Viper850/Viper850-code/include/const_camera_Viper850.xml");
   	cameraParser.parse(RGBcam, cameraXmlFile, "Generic-camera", vpCameraParameters::perspectiveProjWithDistortion, width, height);
 #else
 //  RGBcam.initPersProjWithoutDistortion(525.53, 524.94, 309.9, 282.8);//old
@@ -274,8 +274,9 @@ void vpKinect::warpRGBFrame(const vpImage<vpRGBa> & Irgb, const vpImage<float> &
 			  //! Compute metric coordinates in the ir camera Frame :
 			  vpPixelMeterConversion::convertPoint(IRcam, j, i, x1, y1);
 			  Z1 = Idepth[i][j];
-			  if (Z1!=-1){
-				  P1[0]=x1*Z1;
+              //if (Z1!=-1){
+              if (std::fabs(Z1+1) <= std::numeric_limits<double>::epsilon()){
+                  P1[0]=x1*Z1;
 				  P1[1]=y1*Z1;
 				  P1[2]=Z1;
 				  P1[3]=1;
@@ -283,8 +284,9 @@ void vpKinect::warpRGBFrame(const vpImage<vpRGBa> & Irgb, const vpImage<float> &
 				  //! Change frame :
 				  P2 = rgbMir*P1;
 				  Z2 = P2[2];
-				  if (Z2!= 0){
-					  x2 = P2[0]/P2[2];
+                  //if (Z2!= 0){
+                  if (std::fabs(Z2) > std::numeric_limits<double>::epsilon()){
+                      x2 = P2[0]/P2[2];
 					  y2 = P2[1]/P2[2];
 				  }
 				  else

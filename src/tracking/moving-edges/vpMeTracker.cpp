@@ -1,9 +1,9 @@
 /****************************************************************************
 *
-* $Id: vpMeTracker.cpp 3672 2012-04-04 15:49:57Z ayol $
+* $Id: vpMeTracker.cpp 4303 2013-07-04 14:14:00Z fspindle $
 *
 * This file is part of the ViSP software.
-* Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+* Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
 * 
 * This software is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -126,8 +126,7 @@ vpMeTracker::numberOfSignal()
 unsigned int
 vpMeTracker::totalNumberOfSignal()
 {
-  return list.size();
-
+  return (unsigned int)list.size();
 }
 
 int
@@ -154,12 +153,20 @@ vpMeTracker::outOfImage(vpImagePoint iP, int half, int rows, int cols)
 
 
 /*!
-Virtual function that is called by lower classes vpMeEllipse, vpMeLine 
-and vpMeNurbs.
+  Virtual function that is called by lower classes vpMeEllipse, vpMeLine
+  and vpMeNurbs.
+
+  \exception vpTrackingException::initializationError : Moving edges not initialized.
 */
 void
 vpMeTracker::initTracking(const vpImage<unsigned char>& I)
 {
+  if (!me) {
+    vpDERROR_TRACE(2, "Tracking error: Moving edges not initialized");
+    throw(vpTrackingException(vpTrackingException::initializationError,
+      "Moving edges not initialized")) ;
+  }
+
   // Must set range to 0
   unsigned int range_tmp = me->getRange();
   me->setRange(init_range);
@@ -229,10 +236,23 @@ vpMeTracker::initTracking(const vpImage<unsigned char>& I)
   me->setRange(range_tmp);
 }
 
+/*!
+  Track moving-edges.
 
+  \param I : Image.
+
+  \exception vpTrackingException::initializationError : Moving edges not initialized.
+
+*/
 void
 vpMeTracker::track(const vpImage<unsigned char>& I)
 {
+  if (!me) {
+    vpDERROR_TRACE(2, "Tracking error: Moving edges not initialized");
+    throw(vpTrackingException(vpTrackingException::initializationError,
+      "Moving edges not initialized")) ;
+  }
+
   if (list.empty())
   {
     vpDERROR_TRACE(2, "Tracking error: too few pixel to track");

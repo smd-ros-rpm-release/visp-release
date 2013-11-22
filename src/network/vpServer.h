@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpServer.h 3820 2012-06-27 13:13:29Z fspindle $
+ * $Id: vpServer.h 4303 2013-07-04 14:14:00Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,6 +47,7 @@
 #include <visp/vpException.h>
 #include <visp/vpNetwork.h>
 
+
 /*!
   \class vpServer
 
@@ -58,7 +59,8 @@
   on one computer to another program on another computer.
 
   Exemple of server's code, receiving and sending basic message.
-  It corresponds to the client used in the first exemple of vpClient class' documentation.
+  It corresponds to the client used in the first exemple of vpClient class' 
+  documentation.
   
   \code
 #include <visp/vpServer.h>
@@ -113,9 +115,9 @@ int main(int argc,const char** argv)
   vpServer serv(port);
   serv.start();
 
-#ifdef UNIX
+#if defined(VISP_HAVE_X11)
   vpDisplayX display;
-#else //Win32
+#elif defined(VISP_HAVE_GDI) //Win32
   vpDisplayGDI display;
 #endif
 
@@ -136,8 +138,10 @@ int main(int argc,const char** argv)
         
       if(id == reqImage.getId())
       {
+#if defined(VISP_HAVE_X11) || defined(VISP_HAVE_GDI)
         if (! display.isInitialised() )
           display.init(I, -1, -1, "Remote display");
+#endif
         
         vpDisplay::display(I) ;
         vpDisplay::flush(I);
@@ -171,9 +175,9 @@ private:
   
 public:
   
-                vpServer();
-                vpServer(const int &port);
-                vpServer(const std::string &adress_serv,const int &port_serv);
+  vpServer();
+  vpServer(const int &port);
+  vpServer(const std::string &adress_serv,const int &port_serv);
   
   virtual       ~vpServer();
   
@@ -202,9 +206,9 @@ public:
 
     \return Number of clients connected.
   */
-  unsigned int  getNumberOfClients(){ return receptor_list.size(); }
+  unsigned int  getNumberOfClients(){ return (unsigned int)receptor_list.size(); }
   
-  virtual void  print();
+  void          print();
   
   bool          start();
   

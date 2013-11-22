@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpMeEllipse.h 3581 2012-03-01 15:19:07Z ayol $
+ * $Id: vpMeEllipse.h 4231 2013-04-29 16:26:28Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -90,6 +90,13 @@
   \image html vpMeEllipse2.gif
   \image latex vpMeEllipse2.ps  width=10cm
 
+  The example below available in tutorial-me-ellipse-tracker.cpp and described
+  in \ref tutorial-tracking-me, section \ref tracking_me_ellipse shows how to use this class.
+
+  \include tutorial-me-ellipse-tracker.cpp
+
+  */
+/*
   The code below shows how to use this class.
 \code
 #include <visp/vpConfig.h>
@@ -364,15 +371,14 @@ private:
 //Static Function
 public:	
   static void display(const vpImage<unsigned char>& I, const vpImagePoint &center,
-		      const double &A, const double &B, const double &E,
-		      const double & smallalpha, const double &highalpha,
-		      vpColor color = vpColor::green);
+                      const double &A, const double &B, const double &E,
+                      const double & smallalpha, const double &highalpha,
+                      vpColor color = vpColor::green);
+  static void display(const vpImage<vpRGBa>& I, const vpImagePoint &center,
+                      const double &A, const double &B, const double &E,
+                      const double & smallalpha, const double &highalpha,
+                      vpColor color = vpColor::green);
 
 };
 
-
-
-
 #endif
-
-

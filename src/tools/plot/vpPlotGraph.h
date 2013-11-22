@@ -1,10 +1,10 @@
 
 /****************************************************************************
  *
- * $Id: vpPlotGraph.h 3660 2012-03-29 10:41:21Z fspindle $
+ * $Id: vpPlotGraph.h 4151 2013-03-11 06:52:18Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,7 +56,7 @@
 #include <visp/vpCameraParameters.h>
 #include <visp/vpPoint.h>
 
-#if defined(VISP_HAVE_X11) || defined(VISP_HAVE_GDI) || defined(VISP_HAVE_OPENCV) 
+#if defined(VISP_HAVE_DISPLAY)
 
 class vpPlotGraph
 {
@@ -142,55 +142,57 @@ class vpPlotGraph
     bool dispTitle;
     bool dispLegend;
     
-    
+    unsigned int gridThickness;
+
   public:
     vpPlotGraph();
     ~vpPlotGraph();
     
+    bool check3Dline(vpImagePoint &iP1, vpImagePoint &iP2);
+    bool check3Dpoint(vpImagePoint &iP);
     void clearGraphZone(vpImage<unsigned char> &I);
-    void initGraph (unsigned int nbCurve);
-    void initSize (vpImagePoint topLeft, unsigned int width, unsigned int height, unsigned int margei, unsigned int margej);
     void computeGraphParameters();
     void computeGraphParameters3D();
+
+    void initGraph (unsigned int nbCurve);
+    void initSize (vpImagePoint topLeft, unsigned int width, unsigned int height, unsigned int margei, unsigned int margej);
+    void initScale(vpImage<unsigned char> &I, const double xmin, const double xmax, const int nbDivx, const double ymin, const double ymax, const int nbDivy, const bool gx, const bool gy);
+    void initScale(vpImage<unsigned char> &I, const double xmin, const double xmax, const int nbDivx, const double ymin, const double ymax, const int nbDivy, const double zmin, const double zmax, const int nbDivz, const bool gx, const bool gy);
+
     void displayGrid (vpImage<unsigned char> &I);
     void displayUnit (vpImage<unsigned char> &I);
     void displayTitle (vpImage<unsigned char> &I);
     void displayLegend (vpImage<unsigned char> &I);
     void displayGrid3D (vpImage<unsigned char> &I);
     
-    void setCurveColor(const unsigned int curveNum, const vpColor color);
-    void setTitle (const char *title);
-    void setUnitX (const char *unitx);
-    void setUnitY (const char *unity);
-    void setUnitZ (const char *unitz);
-    void setLegend (const unsigned int curveNum, const char *legend);
-    void setCurveThickness(const unsigned int curveNum, const unsigned int thickness);
+    void findPose();
+
+    bool getPixelValue(vpImage<unsigned char> &I, vpImagePoint &iP);
+
+    bool move(const vpImage<unsigned char> &I);
+    vpHomogeneousMatrix navigation(const vpImage<unsigned char> &I, bool &changed);
+
+    void plot (vpImage<unsigned char> &I, const unsigned int curveNb, const double x, const double y);
+    void plot (vpImage<unsigned char> &I, const unsigned int curveNb, const double x, const double y, const double z);
+    void replot (vpImage<unsigned char> &I);
+    void replot3D (vpImage<unsigned char> &I);
 
     void rescalex(unsigned int side, double extremity);
     void rescaley(unsigned int side, double extremity);
     void rescalez(unsigned int side, double extremity);
     //void rescale(double &min, double &max, double &delta, const int nbDiv, int side);
-    
-    void initScale(vpImage<unsigned char> &I, const double xmin, const double xmax, const int nbDivx, const double ymin, const double ymax, const int nbDivy, const bool gx, const bool gy);
-    
-    void initScale(vpImage<unsigned char> &I, const double xmin, const double xmax, const int nbDivx, const double ymin, const double ymax, const int nbDivy, const double zmin, const double zmax, const int nbDivz, const bool gx, const bool gy);
-    
-    void plot (vpImage<unsigned char> &I, const unsigned int curveNb, const double x, const double y);
-    void plot (vpImage<unsigned char> &I, const unsigned int curveNb, const double x, const double y, const double z);
-    void replot (vpImage<unsigned char> &I);
-    void replot3D (vpImage<unsigned char> &I);
-    
-    bool getPixelValue(vpImage<unsigned char> &I, vpImagePoint &iP);
-    
-    vpHomogeneousMatrix navigation(const vpImage<unsigned char> &I, bool &changed);
-    
-    void findPose();
-    bool move(const vpImage<unsigned char> &I);
-    bool check3Dline(vpImagePoint &iP1, vpImagePoint &iP2);
-    bool check3Dpoint(vpImagePoint &iP);
-    
     void resetPointList(const unsigned int curveNum);
-    
+
+    void setCurveColor(const unsigned int curveNum, const vpColor color);
+    void setCurveThickness(const unsigned int curveNum, const unsigned int thickness);
+    void setGridThickness (const unsigned int thickness) {
+      this->gridThickness = thickness;
+    };
+    void setLegend (const unsigned int curveNum, const char *legend);
+    void setTitle (const char *title);
+    void setUnitX (const char *unitx);
+    void setUnitY (const char *unity);
+    void setUnitZ (const char *unitz);
 };
 
 #endif

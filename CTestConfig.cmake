@@ -3,7 +3,7 @@
 # $Id: CTestConfig.cmake,v 1.9 2008-12-11 13:19:44 fspindle Exp $
 #
 # This file is part of the ViSP software.
-# Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+# Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
 # 
 # This software is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -60,24 +60,28 @@ ELSE(BUILDNAME)
 ENDIF(BUILDNAME)
 
 # Add the compiler name, e.g. "g++, msvc7..."
-IF(MSVC70)
-  SET(BUILDNAME "${BUILDNAME}-msvc70")
-ELSEIF(MSVC71)
-  SET(BUILDNAME "${BUILDNAME}-msvc71")
-ELSEIF(MSVC80)
-  SET(BUILDNAME "${BUILDNAME}-msvc80")
-ELSEIF(MSVC90)
-  SET(BUILDNAME "${BUILDNAME}-msvc90")
-ELSEIF(MSVC10)
-  SET(BUILDNAME "${BUILDNAME}-msvc10")
-ELSEIF(BORLAND)
-  SET(BUILDNAME "${BUILDNAME}-borland")
-ELSEIF(MINGW)
-  SET(BUILDNAME "${BUILDNAME}-mingw")
-ELSE(MSVC70)
+if(MSVC70)
+  set(BUILDNAME "${BUILDNAME}-msvc70")
+elseif(MSVC71)
+  set(BUILDNAME "${BUILDNAME}-msvc71")
+elseif(MSVC80)
+  set(BUILDNAME "${BUILDNAME}-msvc80")
+elseif(MSVC90)
+  set(BUILDNAME "${BUILDNAME}-msvc90")
+elseif(MSVC10)
+  set(BUILDNAME "${BUILDNAME}-msvc10")
+elseif(MSVC11)
+  set(BUILDNAME "${BUILDNAME}-msvc11")
+elseif(MSVC)
+  set(BUILDNAME "${BUILDNAME}-msvc")
+elseif(BORLAND)
+  set(BUILDNAME "${BUILDNAME}-borland")
+elseif(MINGW)
+  set(BUILDNAME "${BUILDNAME}-mingw")
+else()
   # g++
   SET(BUILDNAME "${BUILDNAME}-${CMAKE_BASE_NAME}")
-ENDIF(MSVC70)
+endif()
 
 # Find out the version of gcc being used.
 IF(CMAKE_COMPILER_IS_GNUCC)
@@ -126,6 +130,11 @@ ENDIF(VISP_HAVE_PTU46)
 IF(VISP_HAVE_BICLOPS)
   SET(BUILDNAME "${BUILDNAME}-Biclops")
 ENDIF(VISP_HAVE_BICLOPS)
+
+# Add specific Pioneer robots
+if(VISP_HAVE_PIONEER)
+  set(BUILDNAME "${BUILDNAME}-aria")
+endif()
 
 #---- Framegrabers ----
 # Firewire dc1394-2.x 
@@ -191,6 +200,9 @@ ENDIF(VISP_HAVE_GSL)
 # Ogre
 IF(VISP_HAVE_OGRE)
   SET(BUILDNAME "${BUILDNAME}-Ogre")
+ENDIF()
+IF(VISP_HAVE_OIS)
+  SET(BUILDNAME "${BUILDNAME}-OIS")
 ENDIF()
 # Coin
 IF(VISP_HAVE_COIN)

@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpFernClassifier.h 3796 2012-06-18 13:32:35Z fspindle $
+ * $Id: vpFernClassifier.h 4201 2013-04-08 08:20:47Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -113,7 +113,7 @@ int main()
   fern.matchPoint(Icurrent);
 
   //Display the matched points
-  fern.display(Irefrence, Icurrent);
+  fern.display(Ireference, Icurrent);
 
   return (0);
 }
@@ -122,7 +122,7 @@ int main() {}
 #endif
   \endcode
 
-  It is also possible to create the refernece thanks to only a part of the
+  It is also possible to create the reference thanks to only a part of the
   reference image (not the whole image) and find points to match in only a
   part of the current image. The small following example shows how to do this.
 
@@ -139,7 +139,7 @@ int main()
   vpImage<unsigned char> Icurrent;
   vpFernClassifier fern;
 
-  //First grab the reference image Irefrence
+  //First grab the reference image Ireference
 
   //Select a part of the image by clicking on two points which define a rectangle
   vpImagePoint corners[2];
