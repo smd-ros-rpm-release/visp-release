@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpMomentCommon.h 3760 2012-06-04 08:03:05Z mbakthav $
+ * $Id: vpMomentCommon.h 4276 2013-06-25 12:36:48Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,8 +79,7 @@ class vpMomentObject;
 
     This class carries an vpMomentCommon::updateAll method capable of updating AND computing moments from an object (see 4-step process in vpMoment).
     The moments computed by this class are classical moments used in moment-based visual servoing.
-    For more information see: 
-    - [1] "Point-based and region-based image moments for visual servoing of planar objects" by Omar Tahri and Fran&ccedil;ois Chaumette.
+    For more information see \cite Tahri05z.
 
     To initialize this moment set the user needs to compute the following things:
     - the Mu3 value set: set of third-order centered moments computed for a reference object. (\f$\mu_{ij}$ with $i+j = 3\f$ ).

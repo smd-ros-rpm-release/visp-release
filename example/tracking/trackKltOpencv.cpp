@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: trackKltOpencv.cpp 3797 2012-06-21 07:44:05Z fspindle $
+ * $Id: trackKltOpencv.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -312,7 +312,7 @@ main(int argc, const char ** argv)
     vpCTRACE << "Load: " << filename << std::endl;
 
     // Load a ViSP image used for the display
-    vpImageIo::readPGM(vpI, filename) ;
+    vpImageIo::read(vpI, filename) ;
     // Load an OpenCV IPL image used by the tracker
     if((cvI = cvLoadImage(filename.c_str(), CV_LOAD_IMAGE_GRAYSCALE))== NULL) {
       printf("Cannot read image: %s\n", filename.c_str());
@@ -412,7 +412,7 @@ main(int argc, const char ** argv)
       // read the image
       std::cout << "read : " << filename << std::endl;
       // Load a ViSP image used for the display
-      vpImageIo::readPGM(vpI, filename) ;
+      vpImageIo::read(vpI, filename) ;
       // Load an OpenCV IPL image used by the tracker
       if((cvI = cvLoadImage(filename.c_str(), CV_LOAD_IMAGE_GRAYSCALE))
          == NULL) {

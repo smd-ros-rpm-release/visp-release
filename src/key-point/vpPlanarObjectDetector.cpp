@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpPlanarObjectDetector.cpp 3730 2012-05-14 17:09:58Z fspindle $
+ * $Id: vpPlanarObjectDetector.cpp 4182 2013-03-27 13:20:58Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -420,7 +420,7 @@ vpPlanarObjectDetector::display(vpImage<unsigned char> &I, bool displayKpts)
   possible to set Ireference and Icurrent with the same image when
   calling the method.
 
-  \param Iref : The image where the matched refrence points are
+  \param Iref : The image where the matched reference points are
   displayed.
 
   \param Icurrent : The image where the matched points computed in the

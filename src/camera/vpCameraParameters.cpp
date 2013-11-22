@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpCameraParameters.cpp 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: vpCameraParameters.cpp 4317 2013-07-17 09:40:17Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -51,6 +51,7 @@
 #include <visp/vpCameraParameters.h>
 #include <visp/vpDebug.h>
 #include <visp/vpException.h>
+#include <visp/vpRotationMatrix.h>
 #include <cmath>
 #include <limits>
 
@@ -72,6 +73,11 @@ const vpCameraParameters::vpCameraParametersProjType
 */
 vpCameraParameters::vpCameraParameters()
 {
+  isFov = false;
+  fovAngleX = 0;
+  fovAngleY = 0;
+  width = 0;
+  height = 0;
   init() ;
 }
 
@@ -93,6 +99,11 @@ vpCameraParameters::vpCameraParameters(const vpCameraParameters &c)
 vpCameraParameters::vpCameraParameters(const double px, const double py,
                                        const double u0, const double v0)
 {
+  isFov = false;
+  fovAngleX = 0;
+  fovAngleY = 0;
+  width = 0;
+  height = 0;
   initPersProjWithoutDistortion(px,py,u0,v0) ;
 }
 
@@ -109,6 +120,11 @@ vpCameraParameters::vpCameraParameters(const double px, const double py,
                                        const double u0, const double v0,
                                        const double kud, const double kdu)
 {
+  isFov = false;
+  fovAngleX = 0;
+  fovAngleY = 0;
+  width = 0;
+  height = 0;
   initPersProjWithDistortion(px,py,u0,v0,kud,kdu) ;
 }
 
@@ -237,7 +253,7 @@ vpCameraParameters::init(const vpCameraParameters &c)
 
 /*!
   initialise the camera from a calibration matrix. 
-  Using a calibration matrix leads to a camera without distorsion
+  Using a calibration matrix leads to a camera without distortion
   
   The K matrix in parameters must be like:
   
@@ -278,13 +294,73 @@ vpCameraParameters&
   
   inv_px = cam.inv_px; 
   inv_py = cam.inv_py;
+  
+  isFov = cam.isFov;
+  fovAngleX = cam.fovAngleX;
+  fovAngleY = cam.fovAngleY;
+  fovNormals = cam.fovNormals;
+  width = cam.width;
+  height = cam.height;
+  
   return *this ;
 }
 
 /*!
-  return the calibration matrix K
+  Compute angles and normals of the FOV.
+  
+  \param w : Width of the image
+  \param h : Height of the image.
+*/
+void
+vpCameraParameters::computeFov(const unsigned int &w, const unsigned int &h)
+{
+  if( !isFov && w != width && h != height && w != 0 && h != 0){
+    fovNormals = std::vector<vpColVector>(4);
+    
+    isFov = true;
+    
+    fovAngleX = atan((double)w / ( 2.0 * px ));
+    fovAngleY = atan((double)h / ( 2.0 * py ));
+    
+    width = w;
+    height = h;
+    
+    vpColVector n(3);
+    n = 0;
+    n[0] = 1.0;
+    
+    vpRotationMatrix Rleft(0,-fovAngleX,0);
+    vpRotationMatrix Rright(0,fovAngleX,0);
+    
+    vpColVector nLeft, nRight;
+    
+    nLeft = Rleft * (-n);
+    fovNormals[0] = nLeft.normalize();
+    
+    nRight = Rright * n;
+    fovNormals[1] = nRight.normalize();
+    
+    n = 0;
+    n[1] = 1.0;
+  
+    vpRotationMatrix Rup(fovAngleY,0,0);
+    vpRotationMatrix Rdown(-fovAngleY,0,0);
+    
+    vpColVector nUp, nDown;
+    
+    nUp = Rup * (-n);
+    fovNormals[2] = nUp.normalize();
+    
+    nDown = Rdown * n;
+    fovNormals[3] = nDown.normalize();
+  }
+}
 
-  K is 3x3 matrix given by:
+
+/*!
+  Return the calibration matrix \f$K\f$.
+
+  \f$K\f$ is 3x3 matrix given by:
 
   \f$ K = \left(\begin{array}{ccc}
   p_x & 0 & u_0 \\
@@ -294,6 +370,8 @@ vpCameraParameters&
 
   \warning : this function is useful only in the case of perspective
   projection without distortion.
+
+  \sa get_K_inverse()
 */
 vpMatrix
 vpCameraParameters::get_K() const
@@ -318,6 +396,46 @@ vpCameraParameters::get_K() const
                   with distortion has no sense"));
   }
   return K; 
+}
+/*!
+  Return the calibration matrix \f$K^{-1}\f$.
+
+  \f$K^{-1}\f$ is 3x3 matrix given by:
+
+  \f$ K^{-1} = \left(\begin{array}{ccc}
+  1/p_x & 0 & -u_0/p_x \\
+  0 & 1/p_y & -v_0/p_y  \\
+  0 & 0 & 1
+  \end{array} \right) \f$
+
+  \warning : this function is useful only in the case of perspective
+  projection without distortion.
+
+  \sa get_K()
+*/
+vpMatrix
+vpCameraParameters::get_K_inverse() const
+{
+  vpMatrix K_inv;
+  switch(projModel){
+    case vpCameraParameters::perspectiveProjWithoutDistortion :
+      K_inv.resize(3,3) ;
+      K_inv = 0.0 ;
+      K_inv[0][0] = inv_px ;
+      K_inv[1][1] = inv_py ;
+      K_inv[0][2] = -u0*inv_px ;
+      K_inv[1][2] = -v0*inv_py ;
+      K_inv[2][2] = 1.0 ;
+      break;
+    case vpCameraParameters::perspectiveProjWithDistortion :
+    default :
+      vpERROR_TRACE("\n\t getting K^-1 matrix in the case of projection \
+          with distortion has no sense");
+      throw(vpException(vpException::notImplementedError,
+            "\n\t getting K matrix in the case of projection \
+                  with distortion has no sense"));
+  }
+  return K_inv;
 }
 
 

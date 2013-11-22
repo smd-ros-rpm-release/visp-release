@@ -3,7 +3,7 @@
  * $Id: vpImagePoint.h 2359 2009-11-24 15:09:25Z nmelchio $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -59,8 +59,13 @@ vpVideoWriter::vpVideoWriter()
   
   #ifdef VISP_HAVE_FFMPEG
   ffmpeg = NULL;
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54,51,110) // libavcodec 54.51.100
   codec = CODEC_ID_MPEG1VIDEO;
+#else
+  codec = AV_CODEC_ID_MPEG1VIDEO;
+#endif
   bit_rate = 500000;
+  framerate = 25;
   #endif
 }
 
@@ -99,6 +104,17 @@ void vpVideoWriter::setFileName(const char *filename)
   initFileName = true;
 }
 
+/*!
+  It enables to set the path and the name of the files which will be saved.
+
+  If you want to write a sequence of images, \f$ filename \f$ corresponds to the path followed by the image name template. For exemple, if you want to write different images named image0001.jpeg, image0002.jpg, ... and located in the folder /local/image, \f$ filename \f$ will be "/local/image/image%04d.jpg".
+
+  \param filename : filename template of an image sequence.
+*/
+void vpVideoWriter::setFileName(const std::string &filename)
+{
+  setFileName(filename.c_str());
+}
 
 /*!
   Sets all the parameters needed to write the video or the image sequence.
@@ -127,6 +143,7 @@ void vpVideoWriter::open(vpImage< vpRGBa > &I)
            formatType == FORMAT_MOV)
   {
     ffmpeg = new vpFFMPEG;
+    ffmpeg->setFramerate(framerate);
     ffmpeg->setBitRate(bit_rate);
     if(!ffmpeg->openEncoder(fileName, I.getWidth(), I.getHeight(), codec))
       throw (vpException(vpException::ioError ,"Could not open the video"));
@@ -175,6 +192,7 @@ void vpVideoWriter::open(vpImage< unsigned char > &I)
            formatType == FORMAT_MOV)
   {
     ffmpeg = new vpFFMPEG;
+    ffmpeg->setFramerate(framerate);
     ffmpeg->setBitRate(bit_rate);
     if(!ffmpeg->openEncoder(fileName, I.getWidth(), I.getHeight(), codec))
       throw (vpException(vpException::ioError ,"Could not open the video"));

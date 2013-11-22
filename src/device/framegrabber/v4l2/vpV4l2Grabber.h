@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpV4l2Grabber.h 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: vpV4l2Grabber.h 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -100,7 +100,12 @@
   - /etc/modules.conf
   - or /etc/modprobe.conf
 
-  The example below shows how to use this grabber.
+  This first example available in tutorial-grabber-v4l2.cpp shows how to grab
+  and display images from an usb camera.
+  \include tutorial-grabber-v4l2.cpp
+
+  This other example shows how to use this grabber with an analogic camera
+  attached to a bttv PCI card.
   \code
 #include <visp/vpConfig.h>
 #include <visp/vpImage.h>
@@ -120,7 +125,7 @@ int main()
   g.open(I);        // Open the grabber
 
   g.acquire(I);     // Acquire a 768x576 grey image
-  vpImageIo::writePGM(I, "image.pgm"); // Save the image on the disk
+  vpImageIo::write(I, "image.pgm"); // Save the image on the disk
 #endif
 }
   \endcode
@@ -222,7 +227,7 @@ public:
     return (this->pixelformat);
   }
   /*!
-    Activates the verbose mode to print additionnal informations on stdout.
+    Activates the verbose mode to print additional information on stdout.
     \param verbose : If true activates the verbose mode.
   */
   void setVerboseMode(bool verbose) {
@@ -341,7 +346,7 @@ private:
 
   bool		verbose;
   unsigned	nbuffers;
-  int           field;
+  unsigned int field;
   bool		streaming;
 
   unsigned      input;

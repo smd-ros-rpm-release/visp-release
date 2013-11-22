@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpWireFrameSimulator.cpp 3599 2012-03-07 11:06:36Z fspindle $
+ * $Id: vpWireFrameSimulator.cpp 4227 2013-04-19 07:55:22Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -405,14 +405,13 @@ void vp2jlc_matrix (const vpHomogeneousMatrix vpM, Matrix &jlcM)
   Copy the scene corresponding to the registeresd parameters in the image.
 */
 void
-vpWireFrameSimulator::display_scene(Matrix mat, Bound_scene &sc, vpImage<vpRGBa> &I, vpColor color)
+vpWireFrameSimulator::display_scene(Matrix mat, Bound_scene &sc, const vpImage<vpRGBa> &I, const vpColor &color)
 {
  // extern Bound *clipping_Bound ();
   Bound *bp, *bend;
   Bound *clip; /* surface apres clipping */
   Byte b  = (Byte) *get_rfstack ();
   Matrix m;
-
 
   //bcopy ((char *) mat, (char *) m, sizeof (Matrix));
   memmove((char *) m, (char *) mat, sizeof (Matrix));
@@ -433,19 +432,19 @@ vpWireFrameSimulator::display_scene(Matrix mat, Bound_scene &sc, vpImage<vpRGBa>
       for (; fp < fend; fp++)
       {
         if (fp->is_visible)
-	{
-	  wireframe_Face (fp, point2i);
-	  Point2i *pt = listpoint2i;
-	  for (int i = 1; i < fp->vertex.nbr; i++)
-	  {
-	    vpDisplay::displayLine(I,vpImagePoint((pt)->y,(pt)->x),vpImagePoint((pt+1)->y,(pt+1)->x),color,1);
-	    pt++;
-	  }
-	  if (fp->vertex.nbr > 2)
-	  {
-	    vpDisplay::displayLine(I,vpImagePoint((listpoint2i)->y,(listpoint2i)->x),vpImagePoint((pt)->y,(pt)->x),color,1);
-	  }
-	}
+        {
+          wireframe_Face (fp, point2i);
+          Point2i *pt = listpoint2i;
+          for (int i = 1; i < fp->vertex.nbr; i++)
+          {
+            vpDisplay::displayLine(I,vpImagePoint((pt)->y,(pt)->x),vpImagePoint((pt+1)->y,(pt+1)->x),color,thickness_);
+            pt++;
+          }
+          if (fp->vertex.nbr > 2)
+          {
+            vpDisplay::displayLine(I,vpImagePoint((listpoint2i)->y,(listpoint2i)->x),vpImagePoint((pt)->y,(pt)->x),color,thickness_);
+          }
+        }
       }
     }
   }
@@ -455,7 +454,7 @@ vpWireFrameSimulator::display_scene(Matrix mat, Bound_scene &sc, vpImage<vpRGBa>
   Copy the scene corresponding to the registeresd parameters in the image.
 */
 void
-vpWireFrameSimulator::display_scene(Matrix mat, Bound_scene &sc, vpImage<unsigned char> &I, vpColor color)
+vpWireFrameSimulator::display_scene(Matrix mat, Bound_scene &sc, const vpImage<unsigned char> &I, const vpColor &color)
 {
   //extern Bound *clipping_Bound ();
 
@@ -463,7 +462,6 @@ vpWireFrameSimulator::display_scene(Matrix mat, Bound_scene &sc, vpImage<unsigne
   Bound *clip; /* surface apres clipping */
   Byte b  = (Byte) *get_rfstack ();
   Matrix m;
-
 
   bcopy ((char *) mat, (char *) m, sizeof (Matrix));
   View_to_Matrix (get_vwstack (), *(get_tmstack ()));
@@ -483,19 +481,19 @@ vpWireFrameSimulator::display_scene(Matrix mat, Bound_scene &sc, vpImage<unsigne
       for (; fp < fend; fp++)
       {
         if (fp->is_visible)
-	{
-	  wireframe_Face (fp, point2i);
-	  Point2i *pt = listpoint2i;
-	  for (int i = 1; i < fp->vertex.nbr; i++)
-	  {
-	    vpDisplay::displayLine(I,vpImagePoint((pt)->y,(pt)->x),vpImagePoint((pt+1)->y,(pt+1)->x),color,1);
-	    pt++;
-	  }
-	  if (fp->vertex.nbr > 2)
-	  {
-	    vpDisplay::displayLine(I,vpImagePoint((listpoint2i)->y,(listpoint2i)->x),vpImagePoint((pt)->y,(pt)->x),color,1);
-	  }
-	}
+        {
+          wireframe_Face (fp, point2i);
+          Point2i *pt = listpoint2i;
+          for (int i = 1; i < fp->vertex.nbr; i++)
+          {
+            vpDisplay::displayLine(I,vpImagePoint((pt)->y,(pt)->x),vpImagePoint((pt+1)->y,(pt+1)->x),color,thickness_);
+            pt++;
+          }
+          if (fp->vertex.nbr > 2)
+          {
+            vpDisplay::displayLine(I,vpImagePoint((listpoint2i)->y,(listpoint2i)->x),vpImagePoint((pt)->y,(pt)->x),color,thickness_);
+          }
+        }
       }
     }
   }
@@ -572,6 +570,8 @@ vpWireFrameSimulator::vpWireFrameSimulator()
   
   displayImageSimulator = false;
   objectImage.clear();
+
+  thickness_ = 1;
 }
 
 
@@ -609,7 +609,7 @@ vpWireFrameSimulator::~vpWireFrameSimulator()
   \param desiredObject : Type of scene used to display the object at the desired pose (in the internal view).
 */
 void
-vpWireFrameSimulator::initScene(vpSceneObject obj, vpSceneDesiredObject desiredObject)
+vpWireFrameSimulator::initScene(const vpSceneObject &obj, const vpSceneDesiredObject &desiredObject)
 {
   char name_cam[FILENAME_MAX];
   char name[FILENAME_MAX];
@@ -657,7 +657,7 @@ vpWireFrameSimulator::initScene(vpSceneObject obj, vpSceneDesiredObject desiredO
     case D_STANDARD : { break; }
     case D_CIRCLE : { 
       strcpy(name, scene_dir.c_str());
-      strcat(name, "/cercle_sq2.bnd");
+      strcat(name, "/circle_sq2.bnd");
       break; }
     case D_TOOL : { 
       strcpy(name, scene_dir.c_str());
@@ -722,7 +722,7 @@ vpWireFrameSimulator::initScene(vpSceneObject obj, vpSceneDesiredObject desiredO
   \param imObj : A list of vpImageSimulator instances.
 */
 void
-vpWireFrameSimulator::initScene(vpSceneObject obj, vpSceneDesiredObject desiredObject, const std::list<vpImageSimulator> &imObj)
+vpWireFrameSimulator::initScene(const vpSceneObject &obj, const vpSceneDesiredObject &desiredObject, const std::list<vpImageSimulator> &imObj)
 {
   initScene(obj, desiredObject);
   objectImage = imObj;
@@ -844,7 +844,7 @@ vpWireFrameSimulator::initScene(const char* obj, const char* desiredObject, cons
   \param obj : Type of scene used to display the object at the current position.
 */
 void
-vpWireFrameSimulator::initScene(vpSceneObject obj)
+vpWireFrameSimulator::initScene(const vpSceneObject &obj)
 {
   char name_cam[FILENAME_MAX];
   char name[FILENAME_MAX];
@@ -852,6 +852,8 @@ vpWireFrameSimulator::initScene(vpSceneObject obj)
   object = obj;
 
   strcpy(name_cam, scene_dir.c_str());
+  strcat(name_cam,"/camera.bnd");
+  set_scene(name_cam,&camera,cameraFactor);
 
   strcpy(name, scene_dir.c_str());
   switch (obj)
@@ -886,6 +888,9 @@ vpWireFrameSimulator::initScene(vpSceneObject obj)
   sceneInitialized = true;
   displayObject = true;
   displayCamera = true;
+
+  displayDesiredObject = false;
+  displayImageSimulator = false;
 }
 
 #ifdef VISP_BUILD_DEPRECATED_FUNCTIONS
@@ -927,7 +932,7 @@ vpWireFrameSimulator::initScene(vpSceneObject obj, vpList<vpImageSimulator> &imO
   \param imObj : A list of vpImageSimulator instances.
 */
 void
-vpWireFrameSimulator::initScene(vpSceneObject obj, const std::list<vpImageSimulator> &imObj)
+vpWireFrameSimulator::initScene(const vpSceneObject &obj, const std::list<vpImageSimulator> &imObj)
 {
   initScene(obj);
   objectImage = imObj;
@@ -1199,7 +1204,7 @@ vpWireFrameSimulator::getExternalImage(vpImage<vpRGBa> &I)
         cameraTrajectory.push_back(iP);
         if (camTrajType == CT_LINE)
         {
-          if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor);
+          if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor, thickness_);
         }
         else if (camTrajType == CT_POINT)
           vpDisplay::displayPoint(I,iP,camTrajColor);
@@ -1218,7 +1223,7 @@ vpWireFrameSimulator::getExternalImage(vpImage<vpRGBa> &I)
       for(std::list<vpImagePoint>::const_iterator it=cameraTrajectory.begin(); it!=cameraTrajectory.end(); ++it){
         if (camTrajType == CT_LINE)
         {
-          if (iter != 0) vpDisplay::displayLine(I, iP_1, *it, camTrajColor);
+          if (iter != 0) vpDisplay::displayLine(I, iP_1, *it, camTrajColor, thickness_);
         }
         else if (camTrajType == CT_POINT)
           vpDisplay::displayPoint(I, *it, camTrajColor);
@@ -1252,7 +1257,7 @@ vpWireFrameSimulator::getExternalImage(vpImage<vpRGBa> &I)
   \warning : The objects are displayed thanks to overlays. The image I is not modified.
 */
 void
-vpWireFrameSimulator::getExternalImage(vpImage<vpRGBa> &I, vpHomogeneousMatrix camMf)
+vpWireFrameSimulator::getExternalImage(vpImage<vpRGBa> &I, const vpHomogeneousMatrix &camMf)
 {
   float w44o[4][4],w44cext[4][4],w44c[4][4],x,y,z;
   
@@ -1483,7 +1488,7 @@ vpWireFrameSimulator::getExternalImage(vpImage<unsigned char> &I)
         //vpDisplay::displayPoint(I,cameraTrajectory.value(),vpColor::green);
         if (camTrajType == CT_LINE)
         {
-          if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor);
+          if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor, thickness_);
         }
         else if (camTrajType == CT_POINT)
           vpDisplay::displayPoint(I,iP,camTrajColor);
@@ -1501,7 +1506,7 @@ vpWireFrameSimulator::getExternalImage(vpImage<unsigned char> &I)
 
       for(std::list<vpImagePoint>::const_iterator it=cameraTrajectory.begin(); it!=cameraTrajectory.end(); ++it){
         if (camTrajType == CT_LINE){
-          if (iter != 0) vpDisplay::displayLine(I,iP_1,*it,camTrajColor);
+          if (iter != 0) vpDisplay::displayLine(I,iP_1,*it,camTrajColor, thickness_);
         }
         else if(camTrajType == CT_POINT)
           vpDisplay::displayPoint(I, *it, camTrajColor);
@@ -1535,7 +1540,7 @@ vpWireFrameSimulator::getExternalImage(vpImage<unsigned char> &I)
   \warning : The objects are displayed thanks to overlays. The image I is not modified.
 */
 void
-vpWireFrameSimulator::getExternalImage(vpImage<unsigned char> &I, vpHomogeneousMatrix camMf)
+vpWireFrameSimulator::getExternalImage(vpImage<unsigned char> &I, const vpHomogeneousMatrix &camMf)
 {
   float w44o[4][4],w44cext[4][4],w44c[4][4],x,y,z;
 
@@ -1594,17 +1599,17 @@ vpWireFrameSimulator::getExternalImage(vpImage<unsigned char> &I, vpHomogeneousM
   displayTrajectory(vpImage<unsigned char> &, const std::list<vpHomogeneousMatrix> &, const std::list<vpHomogeneousMatrix> &, const vpHomogeneousMatrix &);
   instead.
 
-  Display a trajectory thanks to a list of homogeneous matrices which give the position of the camera relative to the object and the position of the object relative to the world refrence frame. The trajectory is projected into the view of an external camera whose position is given in parameter.
+  Display a trajectory thanks to a list of homogeneous matrices which give the position of the camera relative to the object and the position of the object relative to the world reference frame. The trajectory is projected into the view of an external camera whose position is given in parameter.
   
   The two lists must have the same size of homogeneous matrices must have the same size.
 
   \param I : The image where the trajectory is displayed.
   \param list_cMo : The homogeneous matrices list containing the position of the camera relative to the object.
   \param list_fMo : The homogeneous matrices list containing the position of the object relative to the world reference frame.
-  \param cMf : A homogeneous matrix which gives the position of the external camera (used to project the trajectory) relative to the world refrence frame.
+  \param cMf : A homogeneous matrix which gives the position of the external camera (used to project the trajectory) relative to the world reference frame.
 */
 void
-vpWireFrameSimulator::displayTrajectory (vpImage<unsigned char> &I, vpList<vpHomogeneousMatrix> &list_cMo, vpList<vpHomogeneousMatrix> &list_fMo, vpHomogeneousMatrix cMf)
+vpWireFrameSimulator::displayTrajectory (const vpImage<unsigned char> &I, vpList<vpHomogeneousMatrix> &list_cMo, vpList<vpHomogeneousMatrix> &list_fMo, vpHomogeneousMatrix cMf)
 {
   if (list_cMo.nbElements() != list_fMo.nbElements())
     throw(vpException(vpException::dimensionError ,"The two lists must have the same size")) ;
@@ -1620,7 +1625,7 @@ vpWireFrameSimulator::displayTrajectory (vpImage<unsigned char> &I, vpList<vpHom
     iP = projectCameraTrajectory(I, rotz * list_cMo.value(), list_fMo.value(), rotz * cMf);
     if (camTrajType == CT_LINE)
     {
-      if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor);
+      if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor, thickness_);
     }
     else if (camTrajType == CT_POINT)
       vpDisplay::displayPoint(I,iP,camTrajColor);
@@ -1636,17 +1641,17 @@ vpWireFrameSimulator::displayTrajectory (vpImage<unsigned char> &I, vpList<vpHom
   displayTrajectory (vpImage<vpRGBa> &, const std::list<vpHomogeneousMatrix> &, const std::list<vpHomogeneousMatrix> &, const vpHomogeneousMatrix &);
   instead.
 
-  Display a trajectory thanks to a list of homogeneous matrices which give the position of the camera relative to the object and the position of the object relative to the world refrence frame. The trajectory is projected into the view of an external camera whose position is given in parameter.
+  Display a trajectory thanks to a list of homogeneous matrices which give the position of the camera relative to the object and the position of the object relative to the world reference frame. The trajectory is projected into the view of an external camera whose position is given in parameter.
   
   The two lists must have the same size of homogeneous matrices must have the same size.
 
   \param I : The image where the trajectory is displayed.
   \param list_cMo : The homogeneous matrices list containing the position of the camera relative to the object.
   \param list_fMo : The homogeneous matrices list containing the position of the object relative to the world reference frame.
-  \param cMf : A homogeneous matrix which gives the position of the external camera (used to project the trajectory) relative to the world refrence frame.
+  \param cMf : A homogeneous matrix which gives the position of the external camera (used to project the trajectory) relative to the world reference frame.
 */
 void
-vpWireFrameSimulator::displayTrajectory (vpImage<vpRGBa> &I, vpList<vpHomogeneousMatrix> &list_cMo, vpList<vpHomogeneousMatrix> &list_fMo, vpHomogeneousMatrix cMf)
+vpWireFrameSimulator::displayTrajectory (const vpImage<vpRGBa> &I, vpList<vpHomogeneousMatrix> &list_cMo, vpList<vpHomogeneousMatrix> &list_fMo, vpHomogeneousMatrix cMf)
 {
   if (list_cMo.nbElements() != list_fMo.nbElements())
     throw(vpException(vpException::dimensionError ,"The two lists must have the same size")) ;
@@ -1662,7 +1667,7 @@ vpWireFrameSimulator::displayTrajectory (vpImage<vpRGBa> &I, vpList<vpHomogeneou
     iP = projectCameraTrajectory(I, rotz * list_cMo.value(), list_fMo.value(), rotz * cMf);
     if (camTrajType == CT_LINE)
     {
-      if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor);
+      if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor,thickness_);
     }
     else if (camTrajType == CT_POINT)
       vpDisplay::displayPoint(I,iP,camTrajColor);
@@ -1676,17 +1681,17 @@ vpWireFrameSimulator::displayTrajectory (vpImage<vpRGBa> &I, vpList<vpHomogeneou
 
 
 /*!
-  Display a trajectory thanks to a list of homogeneous matrices which give the position of the camera relative to the object and the position of the object relative to the world refrence frame. The trajectory is projected into the view of an external camera whose position is given in parameter.
+  Display a trajectory thanks to a list of homogeneous matrices which give the position of the camera relative to the object and the position of the object relative to the world reference frame. The trajectory is projected into the view of an external camera whose position is given in parameter.
 
   The two lists must have the same size of homogeneous matrices must have the same size.
 
   \param I : The image where the trajectory is displayed.
   \param list_cMo : The homogeneous matrices list containing the position of the camera relative to the object.
   \param list_fMo : The homogeneous matrices list containing the position of the object relative to the world reference frame.
-  \param cMf : A homogeneous matrix which gives the position of the external camera (used to project the trajectory) relative to the world refrence frame.
+  \param cMf : A homogeneous matrix which gives the position of the external camera (used to project the trajectory) relative to the world reference frame.
 */
 void
-vpWireFrameSimulator::displayTrajectory (vpImage<unsigned char> &I, const std::list<vpHomogeneousMatrix> &list_cMo,
+vpWireFrameSimulator::displayTrajectory (const vpImage<unsigned char> &I, const std::list<vpHomogeneousMatrix> &list_cMo,
                                          const std::list<vpHomogeneousMatrix> &list_fMo, const vpHomogeneousMatrix &cMf)
 {
   if (list_cMo.size() != list_fMo.size())
@@ -1704,7 +1709,7 @@ vpWireFrameSimulator::displayTrajectory (vpImage<unsigned char> &I, const std::l
     iP = projectCameraTrajectory(I, rotz * (*it_cMo), (*it_fMo), rotz * cMf);
     if (camTrajType == CT_LINE)
     {
-      if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor);
+      if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor,thickness_);
     }
     else if (camTrajType == CT_POINT)
       vpDisplay::displayPoint(I,iP,camTrajColor);
@@ -1716,17 +1721,17 @@ vpWireFrameSimulator::displayTrajectory (vpImage<unsigned char> &I, const std::l
 }
 
 /*!
-  Display a trajectory thanks to a list of homogeneous matrices which give the position of the camera relative to the object and the position of the object relative to the world refrence frame. The trajectory is projected into the view of an external camera whose position is given in parameter.
+  Display a trajectory thanks to a list of homogeneous matrices which give the position of the camera relative to the object and the position of the object relative to the world reference frame. The trajectory is projected into the view of an external camera whose position is given in parameter.
 
   The two lists must have the same size of homogeneous matrices must have the same size.
 
   \param I : The image where the trajectory is displayed.
   \param list_cMo : The homogeneous matrices list containing the position of the camera relative to the object.
   \param list_fMo : The homogeneous matrices list containing the position of the object relative to the world reference frame.
-  \param cMf : A homogeneous matrix which gives the position of the external camera (used to project the trajectory) relative to the world refrence frame.
+  \param cMf : A homogeneous matrix which gives the position of the external camera (used to project the trajectory) relative to the world reference frame.
 */
 void
-vpWireFrameSimulator::displayTrajectory (vpImage<vpRGBa> &I, const std::list<vpHomogeneousMatrix> &list_cMo,
+vpWireFrameSimulator::displayTrajectory (const vpImage<vpRGBa> &I, const std::list<vpHomogeneousMatrix> &list_cMo,
                                          const std::list<vpHomogeneousMatrix> &list_fMo, const vpHomogeneousMatrix &cMf)
 {
   if (list_cMo.size() != list_fMo.size())
@@ -1744,7 +1749,7 @@ vpWireFrameSimulator::displayTrajectory (vpImage<vpRGBa> &I, const std::list<vpH
     iP = projectCameraTrajectory(I, rotz * (*it_cMo), (*it_fMo), rotz * cMf);
     if (camTrajType == CT_LINE)
     {
-      if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor);
+      if (iter != 0) vpDisplay::displayLine(I,iP_1,iP,camTrajColor,thickness_);
     }
     else if (camTrajType == CT_POINT)
       vpDisplay::displayPoint(I,iP,camTrajColor);
@@ -1760,7 +1765,7 @@ vpWireFrameSimulator::displayTrajectory (vpImage<vpRGBa> &I, const std::list<vpH
   Enables to change the external camera position.
 */
 vpHomogeneousMatrix
-vpWireFrameSimulator::navigation(vpImage<vpRGBa> &I, bool &changed)
+vpWireFrameSimulator::navigation(const vpImage<vpRGBa> &I, bool &changed)
 {
   double width = vpMath::minimum(I.getWidth(),I.getHeight());
   vpImagePoint iP;
@@ -1854,7 +1859,7 @@ vpWireFrameSimulator::navigation(vpImage<vpRGBa> &I, bool &changed)
   Enables to change the external camera position.
 */
 vpHomogeneousMatrix
-vpWireFrameSimulator::navigation(vpImage<unsigned char> &I, bool &changed)
+vpWireFrameSimulator::navigation(const vpImage<unsigned char> &I, bool &changed)
 {
   double width = vpMath::minimum(I.getWidth(),I.getHeight());
   vpImagePoint iP;
@@ -1949,7 +1954,7 @@ vpWireFrameSimulator::navigation(vpImage<unsigned char> &I, bool &changed)
   Project the center of the internal camera into the external camera view.
 */
 vpImagePoint
-vpWireFrameSimulator::projectCameraTrajectory (vpImage<vpRGBa> &I, vpHomogeneousMatrix cMo, vpHomogeneousMatrix fMo)
+vpWireFrameSimulator::projectCameraTrajectory (const vpImage<vpRGBa> &I, const vpHomogeneousMatrix &cMo, const vpHomogeneousMatrix &fMo)
 {
   vpPoint point;
   point.setWorldCoordinates(0,0,0);
@@ -1967,7 +1972,7 @@ vpWireFrameSimulator::projectCameraTrajectory (vpImage<vpRGBa> &I, vpHomogeneous
   Project the center of the internal camera into the external camera view.
 */
 vpImagePoint
-vpWireFrameSimulator::projectCameraTrajectory (vpImage<unsigned char> &I, vpHomogeneousMatrix cMo, vpHomogeneousMatrix fMo)
+vpWireFrameSimulator::projectCameraTrajectory (const vpImage<unsigned char> &I, const vpHomogeneousMatrix &cMo, const vpHomogeneousMatrix &fMo)
 {
   vpPoint point;
   point.setWorldCoordinates(0,0,0);
@@ -1985,7 +1990,7 @@ vpWireFrameSimulator::projectCameraTrajectory (vpImage<unsigned char> &I, vpHomo
   Project the center of the internal camera into the external camera view.
 */
 vpImagePoint
-vpWireFrameSimulator::projectCameraTrajectory (vpImage<vpRGBa> &I, vpHomogeneousMatrix cMo, vpHomogeneousMatrix fMo, vpHomogeneousMatrix cMf)
+vpWireFrameSimulator::projectCameraTrajectory (const vpImage<vpRGBa> &I, const vpHomogeneousMatrix &cMo, const vpHomogeneousMatrix &fMo, const vpHomogeneousMatrix &cMf)
 {
   vpPoint point;
   point.setWorldCoordinates(0,0,0);
@@ -2003,7 +2008,7 @@ vpWireFrameSimulator::projectCameraTrajectory (vpImage<vpRGBa> &I, vpHomogeneous
   Project the center of the internal camera into the external camera view.
 */
 vpImagePoint
-vpWireFrameSimulator::projectCameraTrajectory (vpImage<unsigned char> &I, vpHomogeneousMatrix cMo, vpHomogeneousMatrix fMo, vpHomogeneousMatrix cMf)
+vpWireFrameSimulator::projectCameraTrajectory (const vpImage<unsigned char> &I, const vpHomogeneousMatrix &cMo, const vpHomogeneousMatrix &fMo, const vpHomogeneousMatrix &cMf)
 {
   vpPoint point;
   point.setWorldCoordinates(0,0,0);

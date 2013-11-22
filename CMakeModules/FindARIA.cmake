@@ -1,9 +1,9 @@
 #############################################################################
 #
-# $Id: FindARIA.cmake 3719 2012-05-10 05:50:23Z fspindle $
+# $Id: FindARIA.cmake 4288 2013-06-27 11:56:18Z fspindle $
 #
 # This file is part of the ViSP software.
-# Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+# Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
 # 
 # This software is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -66,7 +66,9 @@ if(UNIX)
     )
   #MESSAGE("DBG ARIA_LIBRARY=${ARIA_LIBRARY}")
 else()
-  if(MSVC10)
+  if(MSVC11)
+    set(ARIA_SUFFIX_NAME VC11)
+  elseif(MSVC10)
     set(ARIA_SUFFIX_NAME VC10)
   elseif(MSVC90)
     set(ARIA_SUFFIX_NAME VC9)

@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpMomentGravityCenter.h 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: vpMomentGravityCenter.h 4220 2013-04-17 10:03:36Z mbakthav $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -120,12 +120,12 @@ class VISP_EXPORT vpMomentGravityCenter : public vpMoment {
           Shortcut function to retrieve \f$x_g\f$.
           \return The first gravity center coordinate.
           */
-        double getXg(){ return values[0]; }
+        double getXg() const { return values[0]; }
         /*!
           Shortcut function to retrieve \f$y_g\f$.
           \return The second gravity center coordinate.
           */
-        double getYg(){ return values[1]; }
+        double getYg() const { return values[1]; }
         /*!
           The class's string name.
           */

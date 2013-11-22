@@ -1,9 +1,9 @@
 /****************************************************************************
 *
-* $Id: vpImageConvert.h 3797 2012-06-21 07:44:05Z fspindle $
+* $Id: vpImageConvert.h 4216 2013-04-17 09:06:18Z fspindle $
 *
 * This file is part of the ViSP software.
-* Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+* Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
 *
 * This software is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -89,7 +89,12 @@
 
   \ingroup ImageConversion
 
-  \brief Convert image types.
+  Convert image types.
+
+  The following example available in tutorial-image-converter.cpp shows how to
+  convert an OpenCV cv::Mat image into a vpImage:
+
+  \include tutorial-image-converter.cpp
 
 */
 class VISP_EXPORT vpImageConvert
@@ -153,7 +158,7 @@ public:
 #ifdef VISP_HAVE_LIBJPEG
 #if JPEG_LIB_VERSION > 70
   static void convertToJPEGBuffer(const vpImage<unsigned char> &src, 
-                                  unsigned char **dest, long unsigned int &destSize, unsigned int quality = 100);  
+                                  unsigned char **dest, long unsigned int &destSize, int quality = 100);
   
   static void convertToJPEGBuffer(unsigned char *src, long unsigned int srcSize, 
                                   vpImage<unsigned char> &dest); 
