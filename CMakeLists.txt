@@ -2124,6 +2124,11 @@ ELSE()
 ENDIF()
 
 #----------------------------------------------------------------------
+# Install catkin package.xml
+#----------------------------------------------------------------------
+install(FILES package.xml DESTINATION share/visp)
+
+#----------------------------------------------------------------------
 # For Dart server and tests 
 # We use CDash set through CTestConfig.cmake file
 # Dashboards are sent to http://cdash.irisa.fr/CDash/index.php?project=ViSP
