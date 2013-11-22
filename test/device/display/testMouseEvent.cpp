@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: testMouseEvent.cpp 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: testMouseEvent.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -418,7 +418,7 @@ main(int argc, const char ** argv)
   // exception readPGM may throw various exception if, for example,
   // the file does not exist, or if the memory cannot be allocated
   try{
-    vpImageIo::readPGM(I, filename) ;
+    vpImageIo::read(I, filename) ;
   }
   catch(...)
   {
@@ -527,7 +527,7 @@ main(int argc, const char ** argv)
 
       std::cout << "read : " << filename << std::endl;
       // read the image
-      vpImageIo::readPGM(I, filename);
+      vpImageIo::read(I, filename);
       if (opt_display) {
         // Display the image
         vpDisplay::display(I) ;

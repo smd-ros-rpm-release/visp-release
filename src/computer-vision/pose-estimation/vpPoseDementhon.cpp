@@ -1,9 +1,9 @@
 /****************************************************************************
 *
-* $Id: vpPoseDementhon.cpp 3530 2012-01-03 10:52:12Z fspindle $
+* $Id: vpPoseDementhon.cpp 4276 2013-06-25 12:36:48Z fspindle $
 *
 * This file is part of the ViSP software.
-* Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+* Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
 * 
 * This software is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -58,11 +58,8 @@
 /*!
 \brief  Compute the pose using Dementhon approach for non planar objects
 this is a direct implementation of the algorithm proposed by
-Dementhon and Davis in their 1995 paper.
+Dementhon and Davis in their 1995 paper \cite Dementhon95.
 
-D. Dementhon, L. Davis. --
-Model-based object pose in 25 lines of codes. --
-Int. J. of  Computer Vision, 15:123--141, 1995.
 */
 
 void
@@ -508,7 +505,7 @@ vpPose::calculArbreDementhon(vpMatrix &b, vpColVector &U,
 /*!
 \brief  Compute the pose using Dementhon approach for planar objects
 this is a direct implementation of the algorithm proposed by
-Dementhon in his PhD
+Dementhon in his PhD.
 
 \author Francois Chaumette (simplified by Eric Marchand)
 */
@@ -736,7 +733,7 @@ vpPose::poseDementhonPlan(vpHomogeneousMatrix &cMo)
 
 \return the value of he residual in meter
 */
-double vpPose::computeResidualDementhon(vpHomogeneousMatrix &cMo)
+double vpPose::computeResidualDementhon(const vpHomogeneousMatrix &cMo)
 {
   unsigned int i ;
   double residual = 0 ;

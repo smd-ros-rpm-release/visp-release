@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpFrameGrabber.h 3711 2012-05-09 08:02:58Z fspindle $
+ * $Id: vpFrameGrabber.h 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -97,7 +97,7 @@ int main()
 
   g->open(I);                           // Open the framegrabber
   g->acquire(I);                        // Acquire an image
-  vpImageIo::writePGM(I, "image.pgm");  // Write image on the disk
+  vpImageIo::write(I, "image.pgm");  // Write image on the disk
 #endif
 }
   \endcode

@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpMeLine.h 3581 2012-03-01 15:19:07Z ayol $
+ * $Id: vpMeLine.h 4231 2013-04-29 16:26:28Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -93,6 +93,13 @@
   The angle \f$\theta\f$ is computed thanks to the direction of the
   arrow. The arrow points to the side of the line which is darker.
 
+  The example below available in tutorial-me-line-tracker.cpp and described
+  in \ref tutorial-tracking-me shows how to use this class.
+
+  \include tutorial-me-line-tracker.cpp
+*/
+
+/*
   The code below shows how to use this class.
 \code
 #include <visp/vpConfig.h>
@@ -238,19 +245,20 @@ public:
 //Static Functions
 public: 
   static void display(const vpImage<unsigned char>& I,const vpMeSite &PExt1, const vpMeSite &PExt2,
-		      const double &A, const double &B, const double &C,
-		      vpColor color = vpColor::green,  unsigned int thickness=1);
-  
+                      const double &A, const double &B, const double &C,
+                      const vpColor &color = vpColor::green,  unsigned int thickness=1);
+  static void display(const vpImage<vpRGBa>& I,const vpMeSite &PExt1, const vpMeSite &PExt2,
+                      const double &A, const double &B, const double &C,
+                      const vpColor &color = vpColor::green,  unsigned int thickness=1);
+
   static void display(const vpImage<unsigned char>& I,const vpMeSite &PExt1, const vpMeSite &PExt2,
-		      const std::list<vpMeSite> &site_list,
-		      const double &A, const double &B, const double &C,
-		      vpColor color = vpColor::green,  unsigned int thickness=1);
- 
+                      const std::list<vpMeSite> &site_list,
+                      const double &A, const double &B, const double &C,
+                      const vpColor &color = vpColor::green,  unsigned int thickness=1);
+  static void display(const vpImage<vpRGBa>& I,const vpMeSite &PExt1, const vpMeSite &PExt2,
+                      const std::list<vpMeSite> &site_list,
+                      const double &A, const double &B, const double &C,
+                      const vpColor &color = vpColor::green,  unsigned int thickness=1);
 };
 
-
-
-
 #endif
-
-

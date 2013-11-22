@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpImageConvert.cpp 3784 2012-06-09 19:06:16Z fspindle $
+ * $Id: vpImageConvert.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -402,7 +402,7 @@ int main()
   IplImage* Ip = NULL;
 
   // Read an image on a disk
-  vpImageIo::readPPM(Ic, "image.ppm");
+  vpImageIo::read(Ic, "image.ppm");
   // Convert the vpImage<vpRGBa> in to color IplImage
   vpImageConvert::convert(Ic, Ip);
   // Treatments on IplImage
@@ -487,7 +487,7 @@ int main()
   IplImage* Ip = NULL;
 
   // Read an image on a disk
-  vpImageIo::readPGM(Ig, "image.pgm");
+  vpImageIo::read(Ig, "image.pgm");
   // Convert the vpImage<unsigned char> in to greyscale IplImage
   vpImageConvert::convert(Ig, Ip);
   // Treatments on IplImage Ip
@@ -700,13 +700,13 @@ vpImageConvert::convert(const cv::Mat& src,
         for(unsigned int i=0; i<dest.getRows(); ++i){
           BGRToGrey((unsigned char*)src.data+i*src.step1(),
                     (unsigned char*)dest.bitmap+(dest.getRows()-i-1)*dest.getCols(),
-                    (unsigned int)src.step/3, 1, false);
+                    (unsigned int)dest.getCols(), 1, false);
         }
       }else{
         for(unsigned int i=0; i<dest.getRows(); ++i){
           BGRToGrey((unsigned char*)src.data+i*src.step1(),
                     (unsigned char*)dest.bitmap+i*dest.getCols(),
-                    (unsigned int)src.step/3, 1, false);
+                    (unsigned int)dest.getCols(), 1, false);
         }
       }
     }
@@ -741,7 +741,7 @@ int main()
   cv::Mat Ip;
 
   // Read an image on a disk
-  vpImageIo::readPGM(Ig, "image.pgm");
+  vpImageIo::read(Ig, "image.pgm");
   // Convert the vpImage<unsigned char> in to color cv::Mat.
   vpImageConvert::convert(Ig, Ip);
   // Treatments on cv::Mat Ip
@@ -796,7 +796,7 @@ int main()
   cv::Mat Ip;
 
   // Read an image on a disk
-  vpImageIo::readPGM(Ig, "image.pgm");
+  vpImageIo::read(Ig, "image.pgm");
   // Convert the vpImage<unsigned char> in to greyscale cv::Mat
   vpImageConvert::convert(Ig, Ip);
   // Treatments on cv::MatIp
@@ -845,7 +845,7 @@ int main()
 #if defined(VISP_HAVE_YARP)
   vpImage<unsigned char> I; // A mocochrome image
   // Read an image on a disk
-  vpImageIo::readPGM(I, "image.pgm");
+  vpImageIo::read(I, "image.pgm");
   
   yarp::sig::ImageOf< yarp::sig::PixelMono > *Iyarp = new yarp::sig::ImageOf< yarp::sig::PixelMono >();
   // Convert the vpImage\<unsigned char\> to a yarp::sig::ImageOf\<yarp::sig::PixelMono\>
@@ -1113,7 +1113,7 @@ void vpImageConvert::convert(const yarp::sig::ImageOf< yarp::sig::PixelRgb > *sr
   \param quality : purcentage of the quality of the compressed image.
 */
 void vpImageConvert::convertToJPEGBuffer(const vpImage<unsigned char> &src, 
-                                  unsigned char **dest, long unsigned int &destSize, unsigned int quality)
+                                         unsigned char **dest, long unsigned int &destSize, int quality)
 {
   struct jpeg_compress_struct cinfo;
   struct jpeg_error_mgr jerr;
@@ -1164,7 +1164,7 @@ void vpImageConvert::convertToJPEGBuffer(const vpImage<unsigned char> &src,
   \param dest : Destination image in ViSP format.
 */
 void vpImageConvert::convertToJPEGBuffer(unsigned char *src, long unsigned int srcSize, 
-                                  vpImage<unsigned char> &dest)
+                                         vpImage<unsigned char> &dest)
 {
   struct jpeg_decompress_struct cinfo;
   struct jpeg_error_mgr jerr;
@@ -3470,7 +3470,7 @@ int main()
   vpImage<vpRGBa> Ic; // A color image
 
   // Load a color image from the disk
-  vpImageIo::readPPM(Ic,"image.ppm");
+  vpImageIo::read(Ic,"image.ppm");
 
   // Only R and B Channels are desired.
   vpImage<unsigned char> R, B;
@@ -3480,7 +3480,7 @@ int main()
   vpImageConvert::split(Ic, &R, NULL, &B, NULL);
 
   // Save the the R Channel.
-  vpImageIo::writePGM(R, "RChannel.pgm");
+  vpImageIo::write(R, "RChannel.pgm");
 }
   \endcode
 */

@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vp1394Grabber.h 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: vp1394Grabber.h 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -83,7 +83,7 @@
 
   \brief Class for firewire ieee1394 video devices using libdc1394-1.x api
 
-  \deprecated This class is deprecated. You shoud use
+  \deprecated This class is deprecated. You should use
   vp1394TwoGrabber class instead.
 
   Needs libraw1394-1.2.0 and libdc1394-1.1.0 or more recent versions
@@ -112,7 +112,7 @@ int main()
 
   g.open(I);                           // Open the framegrabber
   g.acquire(I);                        // Acquire an image
-  vpImageIo::writePGM(I, "image.pgm"); // Write image on the disk
+  vpImageIo::write(I, "image.pgm"); // Write image on the disk
 #endif
 }
   \endcode

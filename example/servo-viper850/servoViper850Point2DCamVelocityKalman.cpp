@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: servoViper850Point2DCamVelocityKalman.cpp 3616 2012-03-09 14:31:52Z fspindle $
+ * $Id: servoViper850Point2DCamVelocityKalman.cpp 4300 2013-07-04 09:21:07Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -84,6 +84,8 @@
 #include <visp/vpLinearKalmanFilterInstantiation.h>
 #include <visp/vpDisplay.h>
 #include <visp/vpDisplayX.h>
+#include <visp/vpDisplayOpenCV.h>
+#include <visp/vpDisplayGTK.h>
 
 int
 main()
@@ -172,7 +174,13 @@ main()
     default: break;
     }
 
-    vpDisplayX display(I, (int)(100+I.getWidth()+30), 200,"Current image") ;
+#ifdef VISP_HAVE_X11
+    vpDisplayX display(I, (int)(100+I.getWidth()+30), 200, "Current image") ;
+#elif defined(VISP_HAVE_OPENCV)
+    vpDisplayOpenCV display(I, (int)(100+I.getWidth()+30), 200, "Current image") ;
+#elif defined(VISP_HAVE_GTK)
+    vpDisplayGTK display(I, (int)(100+I.getWidth()+30), 200, "Current image") ;
+#endif
 
     vpDisplay::display(I) ;
     vpDisplay::flush(I) ;
@@ -209,6 +217,7 @@ main()
     // - we want an eye-in-hand control law
     // - robot is controlled in the camera frame
     task.setServo(vpServo::EYEINHAND_CAMERA) ;
+    task.setInteractionMatrixType(vpServo::DESIRED, vpServo::PSEUDO_INVERSE) ;
 
     // - we want to see a point on a point
     task.addFeature(p,pd) ;
@@ -277,9 +286,9 @@ main()
           dedt_mes = 0;
         }
         else{
-          err_1 = err;
           vpMatrix J1 = task.getTaskJacobian();
-          dedt_mes = (err_1 - err)/(Tv) - J1 *vm;
+          dedt_mes = (err - err_1)/(Tv) - J1 *vm;
+          err_1 = err;
         }
 
         // Filter de/dt
@@ -356,7 +365,6 @@ main()
 
       // Flush the display
       vpDisplay::flush(I) ;
-
     }
 
     flog.close() ; // Close the log file

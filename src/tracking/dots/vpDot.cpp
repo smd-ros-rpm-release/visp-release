@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpDot.cpp 3660 2012-03-29 10:41:21Z fspindle $
+ * $Id: vpDot.cpp 4317 2013-07-17 09:40:17Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -76,6 +76,7 @@ void vpDot::init()
 
   compute_moment = false ;
   graphics = false ;
+  thickness = 1;
   maxDotSizePercentage = 0.25 ; // 25 % of the image size
   
   mean_gray_level = 0;
@@ -116,11 +117,8 @@ vpDot::vpDot(const vpImagePoint &ip) : vpTracker()
  */
 vpDot::vpDot(const vpDot& d)  : vpTracker()
 {
-
   *this = d ;
-
 }
-
 
 /*!
   \brief Destructor.
@@ -137,35 +135,38 @@ vpDot::~vpDot()
 vpDot&
 vpDot::operator=(const vpDot& d)
 {
+  ip_edges_list = d.ip_edges_list;
+  ip_connexities_list = d.ip_connexities_list;
+  connexityType = d.connexityType;
   cog = d.getCog();
-
-  graphics = d.graphics ;
-  mean_gray_level = d.mean_gray_level ;
-  gray_level_min = d.gray_level_min ;
-  gray_level_max = d.gray_level_max ;
-  grayLevelPrecision = d.grayLevelPrecision;
-  compute_moment = d.compute_moment ;
-
-  maxDotSizePercentage = d.maxDotSizePercentage;
-
-  m00 = d.m00;
-  m01 = d.m01;
-  m10 = d.m10;
-  m02 = d.m02;
-  m20 = d.m20;
-  mu11 = d.mu11;
-  mu20 = d.mu20;
-  mu02 = d.mu02;
 
   u_min = d.u_min;
   v_min = d.v_min;
   u_max = d.u_max;
   v_max = d.v_max;
 
+  graphics = d.graphics ;
+  thickness = d.thickness;
+  maxDotSizePercentage = d.maxDotSizePercentage;
   gray_level_out = d.gray_level_out;
+  mean_gray_level = d.mean_gray_level ;
+  gray_level_min = d.gray_level_min ;
+  gray_level_max = d.gray_level_max ;
+  grayLevelPrecision = d.grayLevelPrecision;
   gamma = d.gamma;
-
+  compute_moment = d.compute_moment ;
   nbMaxPoint = d.nbMaxPoint;
+
+  m00 = d.m00;
+  m01 = d.m01;
+  m10 = d.m10;
+  m11 = d.m11;
+  m02 = d.m02;
+  m20 = d.m20;
+
+  mu11 = d.mu11;
+  mu20 = d.mu20;
+  mu02 = d.mu02;
 
   return *this ;
 }
@@ -362,8 +363,11 @@ bool vpDot::connexe(const vpImage<unsigned char>& I,unsigned int u,unsigned int 
     ip_edges_list.push_back(ip);
     if (graphics==true)
     {
-      //      printf("u %d v %d\n", u, v);
-      vpDisplay::displayPoint(I, ip, vpColor::red) ;
+      vpImagePoint ip_(ip);
+      for(unsigned int t=0; t<thickness; t++) {
+        ip_.set_u(ip.get_u() + t);
+        vpDisplay::displayPoint(I, ip_, vpColor::red) ;
+      }
       //vpDisplay::flush(I);
     }
   }
@@ -375,7 +379,7 @@ bool vpDot::connexe(const vpImage<unsigned char>& I,unsigned int u,unsigned int 
 
   Compute the center of gravity (COG) of the dot using connex
   components.  We assume the origin pixel (u, v) is in the dot. If
-  not, the dot is seach arround this origin using a spiral search.
+  not, the dot is seach around this origin using a spiral search.
 
   \param I : Image to process.
   \param u : Starting pixel coordinate along the columns from where the
@@ -582,7 +586,7 @@ vpDot::COG(const vpImage<unsigned char> &I, double& u, double& v)
 
    throw(vpTrackingException(vpTrackingException::featureLostError,
 			      "Dot to big")) ;
-  }
+  }  
 }
 
 /*!
@@ -802,6 +806,12 @@ vpDot::track(const vpImage<unsigned char> &I)
       mu02 = m02 - v*m01;
       mu20 = m20 - u*m10;
     }
+
+    if (graphics) {
+      // display a red cross at the center of gravity's location in the image.
+      vpDisplay::displayCross(I, this->cog, 3*thickness+8, vpColor::red, thickness);
+    }
+
   }
   catch(...)
   {
@@ -866,7 +876,7 @@ void vpDot::display(const vpImage<unsigned char>& I, vpColor color,
   \f$Imax=255*\big((\frac{I}{255})^{{\gamma}^{-1}}+(1-grayLevelPrecision)\big)^{\gamma}\f$
   with \f$\gamma=1.5\f$ .
 
-  \sa setWidth(), setHeight(), setSurface(), setInLevel(), setOutLevel()
+  \sa setWidth(), setHeight(), setGrayLevelMin(), setGrayLevelMax()
 */
 void vpDot::setGrayLevelPrecision( const double & grayLevelPrecision )
 {
@@ -900,8 +910,8 @@ void vpDot::setGrayLevelPrecision( const double & grayLevelPrecision )
   \param thickness : Thickness of the dot.
 */
 void vpDot::display(const vpImage<unsigned char>& I,const vpImagePoint &cog, 
-		    const std::list<vpImagePoint> &edges_list, vpColor color, 
-		    unsigned int thickness)
+                    const std::list<vpImagePoint> &edges_list, vpColor color,
+                    unsigned int thickness)
 {
   vpDisplay::displayCross(I, cog, 3*thickness+8, color, thickness);
   std::list<vpImagePoint>::const_iterator it;
@@ -912,11 +922,32 @@ void vpDot::display(const vpImage<unsigned char>& I,const vpImagePoint &cog,
   }
 }
 
+/*!
 
-/*
- * Local variables:
- * c-basic-offset: 2
- * End:
- */
+  Display the dot center of gravity and its list of edges.
+
+  \param I : The image used as background.
+
+  \param cog : The center of gravity.
+
+  \param edges_list : The list of edges;
+
+  \param color : Color used to display the dot.
+
+  \param thickness : Thickness of the dot.
+*/
+void vpDot::display(const vpImage<vpRGBa>& I,const vpImagePoint &cog,
+                    const std::list<vpImagePoint> &edges_list, vpColor color,
+                    unsigned int thickness)
+{
+  vpDisplay::displayCross(I, cog, 3*thickness+8, color, thickness);
+  std::list<vpImagePoint>::const_iterator it;
+
+  for (it = edges_list.begin(); it != edges_list.end(); ++it)
+  {
+    vpDisplay::displayPoint(I, *it, color);
+  }
+}
+
 
 

@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpPlot.h 3821 2012-06-27 13:50:37Z fspindle $
+ * $Id: vpPlot.h 4233 2013-05-02 13:46:42Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,9 +47,9 @@
 #ifndef vpPlot_H
 #define vpPlot_H
 
-#include <visp/vpPlotGraph.h>
-
+#include <visp/vpConfig.h>
 #include <visp/vpDisplay.h>
+#include <visp/vpPlotGraph.h>
 
 /*!
   \class vpPlot
@@ -59,62 +59,60 @@
   instance of the class open a window which contains between 1 and 4
   graphics. Each one contains a desired number of curves.
 
-  \warning This class is only available if display functionalities (X11, GDI or OpenCV)
-  are present. In visp/vpConfig.h header file, you should have one of the macros defines:
-  VISP_HAVE_X11, or VISP_HAVE_GDI, or VISP_HAVE_OPENCV. 
+  \warning This class is only available if one of the display functionalities (X11, GDI, GTK, OpenCV or Direct3D)
+  is available. In visp/vpConfig.h header file, you should have VISP_HAVE_DISPLAY define.
 
-  The example below shows how to use the vpPlot class.
+  The example below shows how to use the vpPlot class. An other example provided in tutoral-ibvs-plotter.cpp
+  and described in \ref tutorial-plotter shows how to use this class to plot in real-time some curves during
+  an image-based visual servo.
 
   \code
-#include <visp/vpConfig.h>
 #include <visp/vpPlot.h>
-
-#if defined(VISP_HAVE_X11) || defined(VISP_HAVE_GDI) || defined(VISP_HAVE_OPENCV) 
 
 int main ()
 {
-  //Create a window (700 by 700) at position (100, 200) with two graphics
+#if defined(VISP_HAVE_DISPLAY)
+  // Create a window (700 by 700) at position (100, 200) with two graphics
   vpPlot A(2, 700, 700, 100, 200, "Curves...");
 
-  //The first graphic contains 1 curve and the second graphic contains 2 curves
+  // The first graphic contains 1 curve and the second graphic contains 2 curves
   A.initGraph(0,1);
   A.initGraph(1,2);
 
-  //The color of the curve in the first graphic is red
+  // The color of the curve in the first graphic is red
   A.setColor(0,0,vpColor::red);
-  //The first curve in the second graphic is green
+  // The first curve in the second graphic is green
   A.setColor(1,0,vpColor::green);
-  //The second curve in the second graphic is blue
+  // The second curve in the second graphic is blue
   A.setColor(1,1,vpColor::blue);
 
-  //Add the point (0,0) in the first graphic 
+  // Add the point (0,0) in the first graphic
   A.plot(0,0,0,0);
 
-  //Add the point (0,1) to the first curve of the second graphic
+  // Add the point (0,1) to the first curve of the second graphic
   A.plot(1,0,0,1);
 
-  //Add the point (0,2) to the second curve of the second graphic
+  // Add the point (0,2) to the second curve of the second graphic
   A.plot(1,1,0,2);
 
-  for (int i = 0; i < 50; i++)
-    {
-      //Add the point (i,sin(i*pi/10) in the first graphic 
-      A.plot(0,0,i,sin(i*M_PI/10));
+  for (int i = 0; i < 50; i++) {
+    // Add the point (i,sin(i*pi/10) in the first graphic
+    A.plot(0,0,i,sin(i*M_PI/10));
 
-      //Add the point (i,1) to the first curve of the second graphic
-      A.plot(1,0,i,1);
+    // Add the point (i,1) to the first curve of the second graphic
+    A.plot(1,0,i,1);
 
-      //Add the point (i,2) to the second curve of the second graphic
-      A.plot(1,1,i,2);
-    }
+    // Add the point (i,2) to the second curve of the second graphic
+    A.plot(1,1,i,2);
+  }
 
   return 0;
-}
 #endif
+}
   \endcode
 */
 
-#if defined(VISP_HAVE_X11) || defined(VISP_HAVE_GDI) || defined(VISP_HAVE_OPENCV) 
+#if defined(VISP_HAVE_DISPLAY)
 
 class VISP_EXPORT vpPlot
 {
@@ -140,7 +138,8 @@ class VISP_EXPORT vpPlot
 	   const unsigned int width=700, 
 	   const int x=-1, const int y=-1, const char *title=NULL);
     ~vpPlot();
-    void init(const unsigned int nbGraph, 
+    void getPixelValue(const bool block);
+    void init(const unsigned int nbGraph,
 	      const unsigned int height=700, 
 	      const unsigned int width=700, 
 	      const int x=-1, const int y=-1, const char *title=NULL);
@@ -148,37 +147,36 @@ class VISP_EXPORT vpPlot
     
     void initRange (const unsigned int graphNum, double xmin, double xmax, double ymin, double ymax);
     void initRange (const unsigned int graphNum, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax);
+    void navigate (void);
+
+    void plot (const unsigned int graphNum, const unsigned int curveNum, const double x, const double y);
+    void plot(const unsigned int graphNum, const double x, const vpColVector &v_y);
+    void plot (const unsigned int graphNum, const unsigned int curveNum, const double x, const double y, const double z);
+    void plot(const unsigned int graphNum, const double x, const vpColVector &v_y, const vpColVector &v_z);
+
+    void resetPointList (const unsigned int graphNum);
+    void resetPointList (const unsigned int graphNum, const unsigned int curveNum);
+
+    void saveData(const unsigned int graphNum, const char* dataFile);
     void setColor (const unsigned int graphNum, const unsigned int curveNum, vpColor color);
+    void setGraphThickness (const unsigned int graphNum, const unsigned int thickness);
+    void setGridThickness (const unsigned int graphNum, const unsigned int thickness);
     /*!
       Set the font of the characters. The display should be initialized before.
 
-      To know which font are available, on Unix you can use xselfonts or xlsfonts utilities.
+      To know which font are available, on Unix you can use xfontsel or xlsfonts utilities.
       */
     void setFont(const char *font)
     {
       if (display->isInitialised())
         vpDisplay::setFont(I, font);
     }
+    void setLegend (const unsigned int graphNum, const unsigned int curveNum, const char *legend);
     void setTitle (const unsigned int graphNum, const char *title);
     void setUnitX (const unsigned int graphNum, const char *unitx);
     void setUnitY (const unsigned int graphNum, const char *unity);
     void setUnitZ (const unsigned int graphNum, const char *unitz);
-    void setLegend (const unsigned int graphNum, const unsigned int curveNum, const char *legend);
     void setThickness (const unsigned int graphNum, const unsigned int curveNum, const unsigned int thickness);
-
-    void plot (const unsigned int graphNum, const unsigned int curveNum, const double x, const double y);
-    void plot(const unsigned int graphNum, const double x, const vpColVector &v_y);
-    void plot (const unsigned int graphNum, const unsigned int curveNum, const double x, const double y, const double z);
-    void plot(const unsigned int graphNum, const double x, const vpColVector &v_y, const vpColVector &v_z);
-    
-    void navigate (void);
-    
-    void getPixelValue(const bool block);
-    
-    void resetPointList (const unsigned int graphNum);
-    void resetPointList (const unsigned int graphNum, const unsigned int curveNum);
-    
-    void saveData(const unsigned int graphNum, const char* dataFile);
     
   private:
     void initNbGraph (unsigned int nbGraph);

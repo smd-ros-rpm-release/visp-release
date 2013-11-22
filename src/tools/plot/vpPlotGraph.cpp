@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpPlotGraph.cpp 3682 2012-04-11 14:28:29Z fnovotny $
+ * $Id: vpPlotGraph.cpp 4303 2013-07-04 14:14:00Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,9 +43,6 @@
 #include <visp/vpConfig.h>
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-
-
-
 #include <visp/vpPlotGraph.h>
 #include <visp/vpMath.h>
 #include <visp/vpMeterPixelConversion.h>
@@ -55,10 +52,14 @@
 #include <visp/vpDisplayOpenCV.h>
 #include <visp/vpDisplayX.h>
 #include <visp/vpDisplayGDI.h>
+#include <visp/vpDisplayGTK.h>
+#include <visp/vpDisplayD3D.h>
+
 #include <cmath>    // std::fabs
 #include <visp/vpMath.h>
 #include <limits>   // numeric_limits
-#if defined(VISP_HAVE_X11) || defined(VISP_HAVE_GDI) || defined(VISP_HAVE_OPENCV) 
+
+#if defined(VISP_HAVE_DISPLAY)
 
 vpPlotGraph::vpPlotGraph()
 {
@@ -97,6 +98,8 @@ vpPlotGraph::vpPlotGraph()
   
   old_iPr = vpImagePoint(-1,-1);
   old_iPz = vpImagePoint(-1,-1);
+
+  gridThickness = 1;
 }
 
 vpPlotGraph::~vpPlotGraph()
@@ -321,9 +324,9 @@ vpPlotGraph::displayGrid (vpImage<unsigned char> &I)
   {
     double x = xorg+(zoomx*t);
     if(gridy)
-      vpDisplay::displayDotLine(I,vpImagePoint(dTopLeft.get_i(),x), vpImagePoint(dTopLeft.get_i()+dHeight,x), gridColor);
+      vpDisplay::displayDotLine(I,vpImagePoint(dTopLeft.get_i(),x), vpImagePoint(dTopLeft.get_i()+dHeight,x), gridColor, gridThickness);
     else
-      vpDisplay::displayDotLine(I,vpImagePoint(yorg,x), vpImagePoint(yorg-3,x), vpColor::black);    
+      vpDisplay::displayDotLine(I,vpImagePoint(yorg,x), vpImagePoint(yorg-3,x), vpColor::black, gridThickness);
     
     if (t+xdelt <= xmax+1e-10)
     {
@@ -334,7 +337,7 @@ vpPlotGraph::displayGrid (vpImage<unsigned char> &I)
       sprintf(valeur, "%.2f", ttemp);
 #if defined VISP_HAVE_X11
       vpDisplay::displayCharString(I,vpImagePoint(yorg + 3*epsi,x),valeur, vpColor::black);
-#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV)
+#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV) || defined(VISP_HAVE_D3D9) || defined(VISP_HAVE_GTK)
       vpDisplay::displayCharString(I,vpImagePoint(yorg + epsi,x),valeur, vpColor::black);
 #endif
     }
@@ -344,7 +347,7 @@ vpPlotGraph::displayGrid (vpImage<unsigned char> &I)
     sprintf(valeur, "x10e%d", -power);
 #if defined VISP_HAVE_X11
     vpDisplay::displayCharString(I,vpImagePoint(yorg+4*epsi,dTopLeft.get_j()+dWidth-6*epsj),valeur, vpColor::black);
-#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV)
+#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV) || defined(VISP_HAVE_D3D9) || defined(VISP_HAVE_GTK)
     vpDisplay::displayCharString(I,vpImagePoint(yorg+4*epsi,dTopLeft.get_j()+dWidth-10*epsj),valeur, vpColor::black);
 #endif
   }
@@ -354,9 +357,9 @@ vpPlotGraph::displayGrid (vpImage<unsigned char> &I)
   {
     double y = yorg-(zoomy*t);
     if(gridx)
-      vpDisplay::displayDotLine(I,vpImagePoint(y,dTopLeft.get_j()), vpImagePoint(y,dTopLeft.get_j()+dWidth), gridColor);
+      vpDisplay::displayDotLine(I,vpImagePoint(y,dTopLeft.get_j()), vpImagePoint(y,dTopLeft.get_j()+dWidth), gridColor, gridThickness);
     else
-      vpDisplay::displayDotLine(I,vpImagePoint(y,xorg), vpImagePoint(y,xorg+3), vpColor::black);
+      vpDisplay::displayDotLine(I,vpImagePoint(y,xorg), vpImagePoint(y,xorg+3), vpColor::black, gridThickness);
       
     double ttemp;
     if (power!=0)
@@ -366,7 +369,7 @@ vpPlotGraph::displayGrid (vpImage<unsigned char> &I)
     sprintf(valeur, "%.2f", ttemp);
 #if defined VISP_HAVE_X11    
     vpDisplay::displayCharString(I,vpImagePoint(y+epsi,topLeft.get_j()+epsj),valeur, vpColor::black);
-#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV)
+#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV) || defined(VISP_HAVE_D3D9) || defined(VISP_HAVE_GTK)
     vpDisplay::displayCharString(I,vpImagePoint(y-epsi,topLeft.get_j()+epsj),valeur, vpColor::black);
 #endif
   }
@@ -375,15 +378,15 @@ vpPlotGraph::displayGrid (vpImage<unsigned char> &I)
     sprintf(valeur, "x10e%d", -power);
 #if defined VISP_HAVE_X11   
     vpDisplay::displayCharString(I,vpImagePoint(dTopLeft.get_i()-3*epsi,dTopLeft.get_j()-6*epsj),valeur, vpColor::black);
-#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV)
+#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV) || defined(VISP_HAVE_D3D9) || defined(VISP_HAVE_GTK)
     vpDisplay::displayCharString(I,vpImagePoint(dTopLeft.get_i()-3*epsi,dTopLeft.get_j()-6*epsj),valeur, vpColor::black);
 #endif
   }
 
-//Ligne horizontal
-  vpDisplay::displayArrow(I,vpImagePoint(yorg,dTopLeft.get_j()), vpImagePoint(yorg,dTopLeft.get_j()+dWidth), vpColor::black);
-//Ligne vertical
-  vpDisplay::displayArrow(I, vpImagePoint(dTopLeft.get_i()+dHeight,xorg), vpImagePoint(dTopLeft.get_i(),xorg), vpColor::black);
+  //Ligne horizontal
+  vpDisplay::displayArrow(I,vpImagePoint(yorg,dTopLeft.get_j()), vpImagePoint(yorg,dTopLeft.get_j()+dWidth), vpColor::black, 4*gridThickness, 2*gridThickness, gridThickness);
+  //Ligne verticale
+  vpDisplay::displayArrow(I, vpImagePoint(dTopLeft.get_i()+dHeight,xorg), vpImagePoint(dTopLeft.get_i(),xorg), vpColor::black, 4*gridThickness, 2*gridThickness, gridThickness);
   
   if (dispUnit)
     displayUnit(I);
@@ -397,7 +400,7 @@ vpPlotGraph::displayGrid (vpImage<unsigned char> &I)
 
 void
 vpPlotGraph::displayUnit (vpImage<unsigned char> &
-#if defined(VISP_HAVE_X11) || defined (VISP_HAVE_GDI) || defined(VISP_HAVE_OPENCV)
+#if defined(VISP_HAVE_X11) || defined (VISP_HAVE_GDI) || defined(VISP_HAVE_OPENCV) || defined(VISP_HAVE_D3D9) || defined(VISP_HAVE_GTK)
                           I
 #endif
                           )
@@ -407,7 +410,7 @@ vpPlotGraph::displayUnit (vpImage<unsigned char> &
 #if defined VISP_HAVE_X11   
   vpDisplay::displayCharString(I,vpImagePoint(yorg-2*epsi,dTopLeft.get_j()+dWidth-offsetx*epsj),unitx, vpColor::black);
   vpDisplay::displayCharString(I,vpImagePoint(dTopLeft.get_i(),dTopLeft.get_j()+epsj),unity, vpColor::black);
-#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV)
+#elif defined (VISP_HAVE_GDI) || defined (VISP_HAVE_OPENCV) || defined(VISP_HAVE_D3D9) || defined(VISP_HAVE_GTK)
   vpDisplay::displayCharString(I,vpImagePoint(yorg-5*epsi,dTopLeft.get_j()+dWidth-offsetx*epsj),unitx, vpColor::black);
   vpDisplay::displayCharString(I,vpImagePoint(dTopLeft.get_i(),dTopLeft.get_j()+epsj),unity, vpColor::black);
 #endif
@@ -428,9 +431,9 @@ vpPlotGraph::displayTitle (vpImage<unsigned char> &I)
 void
 vpPlotGraph::displayLegend (vpImage<unsigned char> &I)
 {
-  unsigned int offsetj = 0;
+  size_t offsetj = 0;
   for (unsigned int i = 0; i < curveNbr; i++) {
-    unsigned int offset = epsj * strlen((curveList+i)->legend);
+    size_t offset = epsj * strlen((curveList+i)->legend);
     offsetj = vpMath::maximum(offset, offsetj);
   }
   if (offsetj > dWidth) offsetj = dWidth;
@@ -1083,7 +1086,7 @@ vpPlotGraph::displayGrid3D (vpImage<unsigned char> &I)
 //Ligne horizontal
   if (check3Dline(iP[0],iP[1]))
   {
-    vpDisplay::displayArrow(I,iP[0],iP[1], vpColor::black);
+    vpDisplay::displayArrow(I,iP[0],iP[1], vpColor::black, gridThickness);
     if (dispUnit)
     {
       vpImagePoint iPunit(iP[1].get_i(),iP[1].get_j()-10*epsj);
@@ -1093,7 +1096,7 @@ vpPlotGraph::displayGrid3D (vpImage<unsigned char> &I)
   }
   if (check3Dline(iP[3],iP[2]))
   {
-    vpDisplay::displayArrow(I,iP[3],iP[2], vpColor::black);
+    vpDisplay::displayArrow(I,iP[3],iP[2], vpColor::black, gridThickness);
     if (dispUnit)
     {
       vpImagePoint iPunit(iP[2].get_i(),iP[2].get_j()-10*epsj);
@@ -1103,7 +1106,7 @@ vpPlotGraph::displayGrid3D (vpImage<unsigned char> &I)
   }
   if (check3Dline(iP[4],iP[5]))
   {
-    vpDisplay::displayArrow(I,iP[4],iP[5], vpColor::black);
+    vpDisplay::displayArrow(I,iP[4],iP[5], vpColor::black, gridThickness);
     if (dispUnit)
     {
       vpImagePoint iPunit(iP[5].get_i(),iP[5].get_j()-10*epsj);
