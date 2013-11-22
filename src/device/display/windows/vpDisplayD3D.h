@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpDisplayD3D.h 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: vpDisplayD3D.h 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,7 +41,8 @@
  *****************************************************************************/
 
 #include <visp/vpConfig.h>
-#if ( defined(VISP_HAVE_D3D9) ) 
+#include <visp/vpDisplay.h>
+#if ( defined(VISP_HAVE_D3D9) )
 
 #ifndef VPDISPLAYD3D_HH
 #define VPDISPLAYD3D_HH
@@ -73,7 +74,7 @@ int main()
   vpImage<unsigned char> I; // Grey level image
 
   // Read an image in PGM P5 format
-  vpImageIo::readPGM(I, "C:/temp/ViSP-images/Klimt/Klimt.pgm");
+  vpImageIo::read(I, "C:/temp/ViSP-images/Klimt/Klimt.pgm");
 
   vpDisplayD3D d;
 
@@ -109,15 +110,10 @@ class VISP_EXPORT vpDisplayD3D : public vpDisplayWin32
 {
 public:
   vpDisplayD3D();
-  
-  vpDisplayD3D(vpImage<vpRGBa> &I,
-		    int winx=-1, int winy=-1,
-		    const char *_title=NULL);
-  
-  vpDisplayD3D(vpImage<unsigned char> &I,
-		    int winx=-1, int winy=-1,
-		    const char *_title=NULL);
-  
+  vpDisplayD3D(int winx, int winy, const char *_title=NULL);
+  vpDisplayD3D(vpImage<vpRGBa> &I,int winx=-1, int winy=-1, const char *_title=NULL);
+  vpDisplayD3D(vpImage<unsigned char> &I, int winx=-1, int winy=-1, const char *_title=NULL);
+
   virtual ~vpDisplayD3D();
   
 };

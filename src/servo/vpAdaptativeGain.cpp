@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpAdaptativeGain.cpp 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: vpAdaptativeGain.cpp 4317 2013-07-17 09:40:17Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,7 +68,7 @@ const double vpAdaptativeGain::DEFAULT_LAMBDA_PENTE  = 1.666;
 /* -------------------------------------------------------------------------- */
 
 /*!
-  \deprecated This class is deprecated. You shoud use
+  \deprecated This class is deprecated. You should use
   vpAdaptive class instead.
   Basic constructor which initializes the parameters with a default value.
 */

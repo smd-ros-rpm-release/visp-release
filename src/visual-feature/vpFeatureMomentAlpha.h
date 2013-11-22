@@ -3,7 +3,7 @@
  * $Id: vpFeatureMomentImpl.h 3317 2011-09-06 14:14:47Z fnovotny $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@ class vpMomentDatabase;
 
   \brief Functionality computation for in-plane rotation moment feature \f$ \alpha \f$. Computes the interaction matrix associated with vpMomentAlpha.
 
-  The interaction matrix for the feature can be deduced from [1] "Point-based and region-based image moments for visual servoing of planar objects" by Omar Tahri and Francois Chaumette.
+  The interaction matrix for the feature can be deduced from \cite Tahri05z.
 
   This class allows to compute the interaction matrix associated to \f$ \alpha = \frac{1}{2} arctan(\frac{2\mu_{11}}{\mu_{20}-\mu_{02}}) \f$ moment primitive.
 

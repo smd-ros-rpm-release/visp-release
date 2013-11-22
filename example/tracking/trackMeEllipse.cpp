@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: trackMeEllipse.cpp 3672 2012-04-04 15:49:57Z ayol $
+ * $Id: trackMeEllipse.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -240,7 +240,7 @@ main(int argc, const char ** argv)
   try{
     vpCTRACE << "Load: " << filename << std::endl;
 
-    vpImageIo::readPGM(I, filename) ;
+    vpImageIo::read(I, filename) ;
   }
   catch(...)
   {
@@ -330,7 +330,7 @@ main(int argc, const char ** argv)
     filename = dirname + s.str();
     std::cout << "Tracking on image: " << filename << std::endl;
     // read the image
-    vpImageIo::readPGM(I, filename);
+    vpImageIo::read(I, filename);
     if (opt_display) {
       // Display the image
       vpDisplay::display(I) ;

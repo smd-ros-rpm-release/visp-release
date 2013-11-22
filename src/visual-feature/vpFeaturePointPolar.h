@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpFeaturePointPolar.h 3653 2012-03-28 12:43:23Z fspindle $
+ * $Id: vpFeaturePointPolar.h 4276 2013-06-25 12:36:48Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,7 +61,7 @@
   \ingroup VsFeature2
 
   \brief Class that defines 2D image point visual feature with
-  polar coordinates \f$(\rho,\theta)\f$.
+  polar coordinates \f$(\rho,\theta)\f$ described in \cite Corke09a.
 
   Let us denote \f$(\rho,\theta)\f$ the polar coordinates of an image
   point, with \f$\rho\f$ the radius of the feature point with respect

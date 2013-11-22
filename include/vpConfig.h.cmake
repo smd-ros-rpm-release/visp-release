@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpConfig.h.cmake 3814 2012-06-26 16:26:16Z fspindle $
+ * $Id: vpConfig.h.cmake 4308 2013-07-08 08:47:09Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -104,6 +104,9 @@
 // Defined if OpenCV available.
 #cmakedefine VISP_HAVE_OPENCV
 
+// Defined if OpenCV_nonfree available.
+#cmakedefine VISP_HAVE_OPENCV_NONFREE
+
 // OpenCV version in hexadecimal (for example 2.1.0 gives 0x020100).
 #ifdef VISP_HAVE_OPENCV
 #  define VISP_HAVE_OPENCV_VERSION ${VISP_HAVE_OPENCV_VERSION}
@@ -117,6 +120,11 @@
 
 // Defined if Direct3D9 library available
 #cmakedefine VISP_HAVE_D3D9
+
+// Defined if one of the display device is available
+#if defined(VISP_HAVE_X11) || defined(VISP_HAVE_GDI) || defined(VISP_HAVE_OPENCV) || defined(VISP_HAVE_D3D9) || defined(VISP_HAVE_GTK)
+#  define VISP_HAVE_DISPLAY
+#endif
 
 // Defined if GSL library available (-lgsl -lgslcblas).
 #cmakedefine VISP_HAVE_GSL
@@ -233,6 +241,9 @@
 // Defined if Irisa's Ptu-46 pan-tilt head available.
 #cmakedefine VISP_HAVE_PTU46
 
+// Defined if Irisa's Viper S650 robot available.
+#cmakedefine VISP_HAVE_VIPER650
+
 // Defined if Irisa's Viper S850 robot available.
 #cmakedefine VISP_HAVE_VIPER850
 
@@ -277,18 +288,53 @@
 //Defined if we want to use c++ 11
 #cmakedefine VISP_HAVE_CPP11_COMPATIBILITY
 
+// Handle portable symbol export.
+// Defining manually which symbol should be exported is required
+// under Windows whether MinGW or MSVC is used.
+//
+// The headers then have to be able to work in two different modes:
+// - dllexport when one is building the library,
+// - dllimport for clients using the library.
+//
+// On Linux, set the visibility accordingly. If C++ symbol visibility
+// is handled by the compiler, see: http://gcc.gnu.org/wiki/Visibility
+# if defined _WIN32 || defined __CYGWIN__
+// On Microsoft Windows, use dllimport and dllexport to tag symbols.
+#  define VISP_DLLIMPORT __declspec(dllimport)
+#  define VISP_DLLEXPORT __declspec(dllexport)
+#  define VISP_DLLLOCAL
+# else
+// On Linux, for GCC >= 4, tag symbols using GCC extension.
+#  if __GNUC__ >= 4
+#   define VISP_DLLIMPORT __attribute__ ((visibility("default")))
+#   define VISP_DLLEXPORT __attribute__ ((visibility("default")))
+#   define VISP_DLLLOCAL  __attribute__ ((visibility("hidden")))
+#  else
+// Otherwise (GCC < 4 or another compiler is used), export everything.
+#   define VISP_DLLIMPORT
+#   define VISP_DLLEXPORT
+#   define VISP_DLLLOCAL
+#  endif // __GNUC__ >= 4
+# endif // defined _WIN32 || defined __CYGWIN__
+
 // Under Windows, for shared libraries (DLL) we need to define export on
 // compilation or import on use (like a third party project).
 // We exploit here the fact that cmake auto set xxx_EXPORTS (with S) on 
 // compilation.
-#if defined (WIN32) && defined(VISP_BUILD_SHARED_LIBS) 
-#  ifdef visp_2_EXPORTS 
-#    define VISP_EXPORT __declspec(dllexport)
+#if defined(VISP_BUILD_SHARED_LIBS)
+// Depending on whether one is building or using the
+// library define VISP_EXPORT to import or export.
+#  ifdef visp_EXPORTS
+#    define VISP_EXPORT VISP_DLLEXPORT
 #  else  
-#    define VISP_EXPORT __declspec(dllimport)
+#    define VISP_EXPORT VISP_DLLIMPORT
 #  endif 
+#  define VISP_LOCAL VISP_DLLLOCAL
 #else
+// If one is using the library statically, get rid of
+// extra information.
 #  define VISP_EXPORT
+#  define VISP_LOCAL
 #endif
 
 // Add the material to produce a warning when deprecated functions are used

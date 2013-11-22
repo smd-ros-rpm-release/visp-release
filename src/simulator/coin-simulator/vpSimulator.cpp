@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpSimulator.cpp 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: vpSimulator.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1016,7 +1016,7 @@ vpSimulator::write (const char * fileName)
       I[i][j].G =g ;
       I[i][j].B =b ;
     }
-  vpImageIo::writePPM(I,fileName) ;
+  vpImageIo::write(I,fileName) ;
   // fclose (fp);
   get =1 ;
 }

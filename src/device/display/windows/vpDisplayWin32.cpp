@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpDisplayWin32.cpp 3682 2012-04-11 14:28:29Z fnovotny $
+ * $Id: vpDisplayWin32.cpp 4174 2013-03-22 10:28:41Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,9 +40,9 @@
  *****************************************************************************/
 
 #include <visp/vpConfig.h>
-#define FLUSH_ROI
-#if ( defined(WIN32) )
+#if ( defined(VISP_HAVE_GDI) || defined(VISP_HAVE_D3D9) )
 
+#define FLUSH_ROI
 #include <visp/vpDisplayWin32.h>
 #include <visp/vpDisplayException.h>
 #include <string>
@@ -57,8 +57,8 @@ const int vpDisplayWin32::MAX_INIT_DELAY  = 5000;
 */
 void vpCreateWindow(threadParam * param)
 {
-  char* title = param->title;
-  (param->vpDisp)->window.initWindow(title, param->x, param->y,
+  //char* title = param->title;
+  (param->vpDisp)->window.initWindow(param->title, param->x, param->y,
 				     param->w, param->h);
   delete param;
 }
@@ -149,23 +149,18 @@ void vpDisplayWin32::init(unsigned int width, unsigned int height,
 			  int x, int y,
 			  const char *title)
 {
-
-
-  if (this->title != NULL)//delete apr�s init du thread.... ou destructeur
-    {
-      delete [] this->title;
-      this->title = NULL;
-    }
-
-  if (title != NULL) {
-    this->title = new char[strlen(title) + 1] ;
+  if (title != NULL)
     strcpy(this->title, title) ;
-  }
+
+  if (x != -1)
+    windowXPosition = x;
+  if (y != -1)
+    windowYPosition = y;
 
   //we prepare the window's thread creation
   threadParam * param = new threadParam;
-  param->x = x;
-  param->y = y;
+  param->x = windowXPosition;
+  param->y = windowYPosition;
   param->w = width;
   param->h = height;
   param->vpDisp = this;
@@ -328,14 +323,15 @@ bool vpDisplayWin32::getClick( bool blocking)
 
   //waits for a button to be pressed
   if(blocking){ 
-    WaitForSingleObject(window.semaClick, NULL);
-    WaitForSingleObject(window.semaClickUp, NULL); //to erase previous events 
+    WaitForSingleObject(window.semaClick, 0);
+    WaitForSingleObject(window.semaClickUp, 0); //to erase previous events
     WaitForSingleObject(window.semaClick, INFINITE);
     ret = true;
   }
-  else
-    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaClick, NULL));
-  
+  else {
+    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaClick, 0));
+  }
+
   return ret; 
 }
 
@@ -367,13 +363,14 @@ bool vpDisplayWin32::getClick(vpImagePoint &ip, bool blocking)
 //   PostMessage(window.getHWnd(), vpWM_GETCLICK, 0,0);
   //waits for a click
   if(blocking){
-    WaitForSingleObject(window.semaClick, NULL);
-    WaitForSingleObject(window.semaClickUp, NULL);//to erase previous events
+    WaitForSingleObject(window.semaClick, 0);
+    WaitForSingleObject(window.semaClickUp, 0);//to erase previous events
     WaitForSingleObject(window.semaClick, INFINITE);
     ret = true;  
   }  
-  else
-    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaClick, NULL));
+  else {
+    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaClick, 0));
+  }
   
   u = window.clickX;
   v = window.clickY;
@@ -414,13 +411,13 @@ bool vpDisplayWin32::getClick(vpImagePoint &ip,
 //   PostMessage(window.getHWnd(), vpWM_GETCLICK, 0,0);
   //waits for a click
   if(blocking){
-    WaitForSingleObject(window.semaClick, NULL);
-    WaitForSingleObject(window.semaClickUp, NULL);//to erase previous events
+    WaitForSingleObject(window.semaClick, 0);
+    WaitForSingleObject(window.semaClickUp, 0);//to erase previous events
     WaitForSingleObject(window.semaClick, INFINITE);
     ret = true;
   }
   else
-    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaClick, NULL));
+    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaClick, 0));
   
   u = window.clickX;
   v = window.clickY;
@@ -467,13 +464,13 @@ bool vpDisplayWin32::getClickUp(vpImagePoint &ip,
 
   //waits for a click release
   if(blocking){
-    WaitForSingleObject(window.semaClickUp, NULL);
-    WaitForSingleObject(window.semaClick, NULL);//to erase previous events
+    WaitForSingleObject(window.semaClickUp, 0);
+    WaitForSingleObject(window.semaClick, 0);//to erase previous events
     WaitForSingleObject(window.semaClickUp, INFINITE);
     ret = true;
   }
   else
-    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaClickUp, NULL));
+    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaClickUp, 0));
   
   u = window.clickXUp;
   v = window.clickYUp;
@@ -507,13 +504,13 @@ bool vpDisplayWin32::getKeyboardEvent( bool blocking )
   bool ret = false ;
   //waits for a keyboard event
   if(blocking){
-    WaitForSingleObject(window.semaKey, NULL); // key down
-    WaitForSingleObject(window.semaKey, NULL); // key up
+    WaitForSingleObject(window.semaKey, 0); // key down
+    WaitForSingleObject(window.semaKey, 0); // key up
     WaitForSingleObject(window.semaKey, INFINITE);
     ret = true;  
   }  
   else
-    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaKey, NULL));
+    ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaKey, 0));
   
   return ret;
 }
@@ -544,13 +541,13 @@ bool vpDisplayWin32::getKeyboardEvent(char *string, bool blocking)
   bool ret = false ;
   //waits for a keyboard event
   if(blocking){
-    WaitForSingleObject(window.semaKey, NULL); // key down
-    WaitForSingleObject(window.semaKey, NULL); // key up
+    WaitForSingleObject(window.semaKey, 0); // key down
+    WaitForSingleObject(window.semaKey, 0); // key up
     WaitForSingleObject(window.semaKey, INFINITE);
     ret = true;  
   }  
   else {
-     ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaKey, NULL));
+     ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaKey, 0));
   }
   //  printf("key: %ud\n", window.key);
   sprintf(string, "%s", window.lpString);
@@ -575,7 +572,7 @@ vpDisplayWin32::getPointerMotionEvent (vpImagePoint &ip)
 
   bool ret = false;
 
-  ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaMove, NULL));
+  ret = (WAIT_OBJECT_0 == WaitForSingleObject(window.semaMove, 0));
   if (ret)
   {
     double u, v;
@@ -657,7 +654,7 @@ void vpDisplayWin32::setTitle(const char *windowtitle)
   \param fontname : Name of the font.
  */
 
-void vpDisplayWin32::setFont(const char *fontname)
+void vpDisplayWin32::setFont(const char * /* fontname */)
 {
 	vpERROR_TRACE("Not yet implemented" ) ;
 }
@@ -708,8 +705,13 @@ void vpDisplayWin32::flushDisplayROI(const vpImagePoint &iP, const unsigned int 
   hr2.right_bottom = (unsigned short)(iP.get_v()+height-1);
 
   //sends a message to the window
+#  if 1 // new version FS
+  WPARAM wp = (hr1.left_top << sizeof(unsigned short)) + hr1.right_bottom;
+  LPARAM lp = (hr2.left_top << sizeof(unsigned short)) + hr2.right_bottom;
+#  else // produce warnings with MinGW
   WPARAM wp=*((WPARAM*)(&hr1));
   LPARAM lp=*((WPARAM*)(&hr2));
+#  endif
   PostMessage(window.getHWnd(), vpWM_DISPLAY_ROI, wp,lp);
 #else
   PostMessage(window.getHWnd(), vpWM_DISPLAY, 0,0);
@@ -944,10 +946,6 @@ void vpDisplayWin32::closeDisplay()
     displayHasBeenInitialized = false ;
 	window.initialized = false ;
   }
-  if (this->title != NULL) {
-    delete [] this->title;
-    this->title = NULL;
-  }
 }
 
 /*!
@@ -962,4 +960,3 @@ void vpDisplayWin32::getImage(vpImage<vpRGBa> &I)
 }
 
 #endif
-

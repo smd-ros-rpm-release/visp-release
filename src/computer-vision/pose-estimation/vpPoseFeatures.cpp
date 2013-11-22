@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpPoseFeatures.cpp 3839 2012-07-06 13:02:08Z ayol $
+ * $Id: vpPoseFeatures.cpp 4303 2013-07-04 14:14:00Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -66,45 +66,45 @@ vpPoseFeatures::~vpPoseFeatures()
 */
 void vpPoseFeatures::clear()
 { 
-  for(int i = featurePoint_Point_list.size()-1 ; i >= 0 ; i--)
-    delete featurePoint_Point_list[i].desiredFeature;
+  for(int i = (int)featurePoint_Point_list.size()-1 ; i >= 0 ; i--)
+    delete featurePoint_Point_list[(unsigned int)i].desiredFeature;
   featurePoint_Point_list.clear();
   
-  for(int i = featurePoint3D_Point_list.size()-1 ; i >= 0 ; i--)
-    delete featurePoint3D_Point_list[i].desiredFeature;
+  for(int i = (int)featurePoint3D_Point_list.size()-1 ; i >= 0 ; i--)
+    delete featurePoint3D_Point_list[(unsigned int)i].desiredFeature;
   featurePoint3D_Point_list.clear();
   
-  for(int i = featureVanishingPoint_Point_list.size()-1 ; i >= 0 ; i--)
-    delete featureVanishingPoint_Point_list[i].desiredFeature;
+  for(int i = (int)featureVanishingPoint_Point_list.size()-1 ; i >= 0 ; i--)
+    delete featureVanishingPoint_Point_list[(unsigned int)i].desiredFeature;
   featureVanishingPoint_Point_list.clear();
   
-  for(int i = featureVanishingPoint_DuoLine_list.size()-1 ; i >= 0 ; i--)
-    delete featureVanishingPoint_DuoLine_list[i].desiredFeature;
+  for(int i = (int)featureVanishingPoint_DuoLine_list.size()-1 ; i >= 0 ; i--)
+    delete featureVanishingPoint_DuoLine_list[(unsigned int)i].desiredFeature;
   featureVanishingPoint_DuoLine_list.clear();
   
-  for(int i = featureEllipse_Sphere_list.size()-1 ; i >= 0 ; i--)
-    delete featureEllipse_Sphere_list[i].desiredFeature;
+  for(int i = (int)featureEllipse_Sphere_list.size()-1 ; i >= 0 ; i--)
+    delete featureEllipse_Sphere_list[(unsigned int)i].desiredFeature;
   featureEllipse_Sphere_list.clear();
   
-  for(int i = featureEllipse_Circle_list.size()-1 ; i >= 0 ; i--)
-    delete featureEllipse_Circle_list[i].desiredFeature;
+  for(int i = (int)featureEllipse_Circle_list.size()-1 ; i >= 0 ; i--)
+    delete featureEllipse_Circle_list[(unsigned int)i].desiredFeature;
   featureEllipse_Circle_list.clear();
   
-  for(int i = featureLine_Line_list.size()-1 ; i >= 0 ; i--)
-    delete featureLine_Line_list[i].desiredFeature;
+  for(int i = (int)featureLine_Line_list.size()-1 ; i >= 0 ; i--)
+    delete featureLine_Line_list[(unsigned int)i].desiredFeature;
   featureLine_Line_list.clear();
   
-  for(int i = featureLine_DuoLineInt_List.size()-1 ; i >= 0 ; i--)
-    delete featureLine_DuoLineInt_List[i].desiredFeature;
+  for(int i = (int)featureLine_DuoLineInt_List.size()-1 ; i >= 0 ; i--)
+    delete featureLine_DuoLineInt_List[(unsigned int)i].desiredFeature;
   featureLine_DuoLineInt_List.clear();
   
-  for(int i = featureSegment_DuoPoints_list.size()-1 ; i >= 0 ; i--)
-    delete featureSegment_DuoPoints_list[i].desiredFeature; 
+  for(int i = (int)featureSegment_DuoPoints_list.size()-1 ; i >= 0 ; i--)
+    delete featureSegment_DuoPoints_list[(unsigned int)i].desiredFeature;
   featureSegment_DuoPoints_list.clear();
   
 #ifdef VISP_HAVE_CPP11_COMPATIBILITY
-  for(int i = featureSpecific_list.size()-1 ; i >= 0 ; i--)
-    delete featureSpecific_list[i]; 
+  for(int i = (int)featureSpecific_list.size()-1 ; i >= 0 ; i--)
+    delete featureSpecific_list[(unsigned int)i];
   featureSpecific_list.clear();
 #endif
     
@@ -126,7 +126,7 @@ void vpPoseFeatures::addFeaturePoint(const vpPoint &p)
   
   totalSize++;
   if(featurePoint_Point_list.size() > maxSize)
-    maxSize = featurePoint_Point_list.size();
+    maxSize = (unsigned int)featurePoint_Point_list.size();
 }
 
 /*!
@@ -143,7 +143,7 @@ void vpPoseFeatures::addFeaturePoint3D(const vpPoint &p)
   
   totalSize++;
   if(featurePoint3D_Point_list.size() > maxSize)
-    maxSize = featurePoint3D_Point_list.size();
+    maxSize = (unsigned int)featurePoint3D_Point_list.size();
 }
 
 /*!
@@ -160,7 +160,7 @@ void vpPoseFeatures::addFeatureVanishingPoint(const vpPoint &p)
   
   totalSize++;
   if(featureVanishingPoint_Point_list.size() > maxSize)
-    maxSize = featureVanishingPoint_Point_list.size();
+    maxSize = (unsigned int)featureVanishingPoint_Point_list.size();
 }
 
 /*!
@@ -179,7 +179,7 @@ void vpPoseFeatures::addFeatureVanishingPoint(const vpLine &l1, const vpLine &l2
   
   totalSize++;
   if(featureVanishingPoint_DuoLine_list.size() > maxSize)
-    maxSize = featureVanishingPoint_DuoLine_list.size();
+    maxSize = (unsigned int)featureVanishingPoint_DuoLine_list.size();
 }
 
 /*!
@@ -196,7 +196,7 @@ void vpPoseFeatures::addFeatureEllipse(const vpSphere &s)
   
   totalSize++;
   if(featureEllipse_Sphere_list.size() > maxSize)
-    maxSize = featureEllipse_Sphere_list.size();
+    maxSize = (unsigned int)featureEllipse_Sphere_list.size();
 }
 
 /*!
@@ -213,7 +213,7 @@ void vpPoseFeatures::addFeatureEllipse(const vpCircle &c)
   
   totalSize++;
   if(featureEllipse_Circle_list.size() > maxSize)
-    maxSize = featureEllipse_Circle_list.size();
+    maxSize = (unsigned int)featureEllipse_Circle_list.size();
 }
   
 /*!
@@ -230,7 +230,7 @@ void vpPoseFeatures::addFeatureLine(const vpLine &l)
   
   totalSize++;
   if(featureLine_Line_list.size() > maxSize)
-    maxSize = featureLine_Line_list.size();
+    maxSize = (unsigned int)featureLine_Line_list.size();
 }
 
 /*!
@@ -250,7 +250,7 @@ void vpPoseFeatures::addFeatureLine(const vpCylinder &c, const int &line)
   
   totalSize++;
   if(featureLine_DuoLineInt_List.size() > maxSize)
-    maxSize = featureLine_DuoLineInt_List.size();
+    maxSize = (unsigned int)featureLine_DuoLineInt_List.size();
 }
 
 /*!
@@ -269,7 +269,7 @@ void vpPoseFeatures::addFeatureSegment(vpPoint &P1, vpPoint &P2)
   
   totalSize++;
   if(featureSegment_DuoPoints_list.size() > maxSize)
-    maxSize = featureSegment_DuoPoints_list.size();
+    maxSize = (unsigned int)featureSegment_DuoPoints_list.size();
 }
 
 /*!
@@ -402,17 +402,9 @@ void vpPoseFeatures::error_and_interaction(vpHomogeneousMatrix & cMo, vpColVecto
 
   \param type : Method to use for the pose computation.
 
-  - The virtual visual servoing approach is described in:
-  E. Marchand, F. Chaumette. Virtual Visual Servoing: a framework for real-time
-  augmented reality. In EUROGRAPHICS 2002 Conference Proceeding, G. Drettakis,
-  H.-P. Seidel (eds.), Computer Graphics Forum, Volume 21(3), Pages 289-298,
-  Sarrebruck, Germany, 2002.
+  - The virtual visual servoing approach is described in \cite Marchand02c.
 
-  - The robust virtual visual servoing approach is described in:
-  A.I. Comport, E. Marchand, M. Pressigout, F. Chaumette. Real-time
-  markerless tracking for augmented reality: the virtual visual servoing
-  framework. IEEE Trans. on Visualization and Computer Graphics,
-  12(4):615-628, July 2006.
+  - The robust virtual visual servoing approach is described in \cite Comport06b.
 
 */
 void vpPoseFeatures::computePose(vpHomogeneousMatrix & cMo, const vpPoseFeaturesMethodType &type)
@@ -468,7 +460,7 @@ void vpPoseFeatures::computePoseVVS(vpHomogeneousMatrix & cMo)
 
       // compute the pseudo inverse of the interaction matrix
       vpMatrix Lp ;
-      int rank = L.pseudoInverse(Lp,1e-16) ;
+      unsigned int rank = L.pseudoInverse(Lp,1e-16) ;
       
       if(rank < 6){
         if(verbose)
@@ -500,15 +492,8 @@ void vpPoseFeatures::computePoseVVS(vpHomogeneousMatrix & cMo)
 
 
 /*!
-  Compute the pose thanks to the robust virtual visual servoing approach
+  Compute the pose thanks to the robust virtual visual servoing approach described in \cite Comport06b.
 
-  This approach is described in:
-
-  A.I. Comport, E. Marchand, M. Pressigout, F. Chaumette. Real-time
-  markerless tracking for augmented reality: the virtual visual servoing
-  framework. IEEE Trans. on Visualization and Computer Graphics,
-  12(4):615-628, July 2006.
-  
   \param cMo : Computed pose.
 */
 void vpPoseFeatures::computePoseRobustVVS(vpHomogeneousMatrix & cMo)
@@ -562,7 +547,7 @@ void vpPoseFeatures::computePoseRobustVVS(vpHomogeneousMatrix & cMo)
       vpMatrix Lp ;
       vpMatrix LRank;
       (W*L).pseudoInverse(Lp,1e-6) ;
-      int rank = L.pseudoInverse(LRank,1e-6) ;
+      unsigned int rank = L.pseudoInverse(LRank,1e-6) ;
       
       if(rank < 6){
         if(verbose)

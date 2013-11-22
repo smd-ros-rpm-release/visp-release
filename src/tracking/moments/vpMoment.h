@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpMoment.h 3530 2012-01-03 10:52:12Z fspindle $
+ * $Id: vpMoment.h 4219 2013-04-17 10:00:56Z mbakthav $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -116,7 +116,7 @@ class VISP_EXPORT vpMoment{
 
 
  public:
-        inline vpMomentObject& getObject(){ return *object;}
+        inline vpMomentObject& getObject() const { return *object;}
         vpMoment();
         /*!
         Returns all values computed by the moment.

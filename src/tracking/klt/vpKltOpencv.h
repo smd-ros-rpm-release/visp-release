@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpKltOpencv.h 3797 2012-06-21 07:44:05Z fspindle $
+ * $Id: vpKltOpencv.h 4231 2013-04-29 16:26:28Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -91,52 +91,14 @@ typedef void (*funcevent)(int);
   \ingroup TrackingImagePoint
 
   \brief Wrapper for the KLT (Kanade-Lucas-Tomasi) feature tracker
-  implemented with OpenCV.
+  implemented in OpenCV.
 
-  The following example shows how to use the main functions of the class:
+  The following example available in tutorial-klt-tracker.cpp shows how to use
+  the main functions of the class.
 
-  \code
-#include <visp/vpConfig.h>
-#include <visp/vpImage.h>
-#include <visp/vpDisplay.h>
-#include <visp/vpKltOpencv.h>
-#include <visp/vpImageConvert.h>
+  \include tutorial-klt-tracker.cpp
 
-int main()
-{
-#if VISP_HAVE_OPENCV_VERSION >= 0x010100 // KLT only available since OpenCV-1.1.0
-  vpImage<unsigned char> I;
-  IplImage* Icv = NULL;
-  vpKltOpencv klt;
-
-  //First grab the initial image I
-
-  //Convert the image I to the IplImage format.
-  vpImageConvert::convert(I, Icv);
-
-  //Initialise the tracking on the whole image.
-  klt.initTracking(Icv, NULL);
-
-  while(true)
-  {
-    // Grab a new image and convert it to the OpenCV format.
-    vpImageConvert::convert(I, Icv);
-
-    // Track the features on the current image.
-    klt.track(Icv);
-
-    // Display the features tracked at the current iteration.
-    klt.display(I);
-  }
-
-  cvReleaseImage(&Icv);
-#else
-  std::cout << "vpKltOpencv requires ViSP with OpenCV." << std::endl;
-#endif
-  return(0);
-}
-  \endcode
-
+  A line by line explanation is provided in \ref tutorial-tracking-keypoint.
 */
 class VISP_EXPORT vpKltOpencv
 {
@@ -144,11 +106,9 @@ class VISP_EXPORT vpKltOpencv
   int initialized; //Is the tracker ready ?
 
   int maxFeatures; //Maximum number of features to track (Default 50)
-  int countFeatures; //Currently tracked features
-  int countPrevFeatures; //Previously tracked features
   int globalcountFeatures; //Keep over time for ID
 
-  int flags; //Flags for tracking (internal)
+  
 
   int win_size; //Size of search window for tracker (default 10)
   double quality; //Multiplier for the maxmin eigenvalue; specifies minimal accepted quality of image corners (default 0.01)
@@ -165,11 +125,19 @@ class VISP_EXPORT vpKltOpencv
   IplImage *prev_pyramid; //Gaussian pyramid data for the previous iteration
   IplImage *swap_temp; //Internal
 
+  int countFeatures; //Currently tracked features
+  int countPrevFeatures; //Previously tracked features
+  
   CvPoint2D32f *features; //List of features
   CvPoint2D32f *prev_features; //List of features for previous iteration
   
   long *featuresid; //Array of ids for features
   long *prev_featuresid; //Array of ids for previous features
+  
+  int flags; //Flags for tracking (internal)
+  
+  bool initial_guess; //Bool to precise if the next call to track() uses an initial guess
+  
   bool *lostDuringTrack; // Result of the tracker for every feature : 1 = lost, 0 = still present
   char *status; //Result of the tracker for every features : 0 = lost, 1 = found
 
@@ -194,40 +162,60 @@ class VISP_EXPORT vpKltOpencv
   vpKltOpencv(const vpKltOpencv& copy);
   virtual ~vpKltOpencv();
 
+  void addFeature(const int &id, const float &x, const float &y);
+
+  //Draw the tracked features on the given image
+  void display(const vpImage<unsigned char> &I,
+               vpColor color = vpColor::red, unsigned int thickness=1);
+
+  //! Get the block size
+  int getBlockSize() const {return block_size;}
+  void getFeature(int index, int &id, float &x, float &y) const;
+  //! Get the list of features
+  CvPoint2D32f* getFeatures() const {return features;}
+  //! Get the list of features id
+  long* getFeaturesId() const {return featuresid;}
+  //! Get Harris free parameter
+  double getHarrisFreeParameter() const {return harris_free_parameter;}
+  //! Get the list of lost feature
+  bool *getListOfLostFeature() const { return lostDuringTrack; }
+  //! Get Max number of features
+  int getMaxFeatures() const {return maxFeatures;}
+  //! Get Min Distance
+  double getMinDistance() const {return min_distance;}
+  //! Get the current number of features
+  int getNbFeatures() const { return countFeatures; }
+  //! Get the previous number of features
+  int getNbPrevFeatures() const { return countPrevFeatures; }
+  void getPrevFeature(int index, int &id, float &x, float &y) const;
+  //! Get the list of features
+  CvPoint2D32f* getPrevFeatures() const {return prev_features;}
+  //! Get the list of features id
+  long* getPrevFeaturesId() const {return prev_featuresid;}
+  //! Get the number of pyramid levels
+  int getPyramidLevels() const {return pyramid_level;}
+  //! Get the quality of the tracker
+  double getQuality() const {return quality;}
+  //! Get Max number of features
+  int getWindowSize() const {return win_size;}
+
   //Detect corners in the image. Initialize the tracker
   void initTracking(const IplImage *I, const IplImage *mask = NULL);
 
   //Track !
   void track(const IplImage *I);
 
-  //Draw the tracked features on the given image
-  void display(const vpImage<unsigned char> &I,
-	       vpColor color = vpColor::red);
 
   //Seters
-  
-  /* Should be used only before initTracking */
-  void setMaxFeatures(const int input);
-
   /*!
-    Set the window size for the sub-pixel computation.
+    Set the size of the averaging block used to track the features.
 
-    \warning The tracker must be re-initialised using the method initTracking().
+    \warning The input is a signed integer to be compatible with OpenCV. However,
+    it must be a positive integer.
 
-    \param input : The new number of maximum features.
+    \param input : The new size of the block.
   */
-  void setWindowSize(const int input) {initialized = 0; win_size=input;}
-  void setQuality(double input) {initialized = 0; quality=input;}
-
-  /*!
-    Set the minimal distance between two points during the initialisation.
-
-    \warning The tracker must be re-initialised using the method initTracking().
-
-    \param input : The new minimal distance between two points.
-  */
-  void setMinDistance(double input) {initialized = 0; min_distance=input;}
-
+  void setBlockSize(const int input) {initialized = 0; block_size=input;}
   /*!
     Set the Harris parameter (The \e k value).
 
@@ -236,28 +224,22 @@ class VISP_EXPORT vpKltOpencv
     \param input : The new Harris parameter.
   */
   void setHarrisFreeParameter(double input) {initialized = 0; harris_free_parameter=input;}
-
+  void setInitialGuess(CvPoint2D32f **guess_pts);
   /*!
-    Set the size of the averaging block used to track the features. 
-    
-    \warning The input is a signed integer to be compatible with OpenCV. However, 
-    it must be a positive integer.
-    
-    \param input : The new size of the block.
-  */
-  void setBlockSize(const int input) {initialized = 0; block_size=input;}
-  void setUseHarris(const int input) {initialized = 0; use_harris=input;}
+    Is a feature valid (e.g. : test if not too close to borders) -> event(id_tracker, x, y)
+    */
+  void setIsFeatureValid(funccheck input) {IsFeatureValid = input;}
 
+  /* Should be used only before initTracking */
+  void setMaxFeatures(const int input);
   /*!
-    Set the maximal pyramid level. If the level is zero, then no pyramid is
-    computed for the optical flow.
+    Set the minimal distance between two points during the initialisation.
 
     \warning The tracker must be re-initialised using the method initTracking().
 
-    \param input : The new maximal pyramid level.
+    \param input : The new minimal distance between two points.
   */
-  void setPyramidLevels(const int input) {initialized = 0; pyramid_level=input;}
-  void setTrackerId(int tid) {_tid = tid;}
+  void setMinDistance(double input) {initialized = 0; min_distance=input;}
 
   //Functors
 
@@ -269,41 +251,45 @@ class VISP_EXPORT vpKltOpencv
   void setOnNewFeature(funcinfo input) {OnNewFeature = input;}
   //Event when a feature is found while tracking -> event(id_tracker, index, uid, x, y)
   void setOnMeasureFeature(funcinfo input) {OnMeasureFeature = input;}
-  //Is a feature valid (e.g. : test if not too close to borders) -> event(id_tracker, x, y)
-  void setIsFeatureValid(funccheck input) {IsFeatureValid = input;}
+  /*!
+    Set the maximal pyramid level. If the level is zero, then no pyramid is
+    computed for the optical flow.
 
-  //! Get the list of lost feature
-  bool *getListOfLostFeature() const { return lostDuringTrack; }
-  //! Get the list of features
-  CvPoint2D32f* getFeatures() const {return features;}
-  //! Get the list of features id
-  long* getFeaturesId() const {return featuresid;}
-  //! Get the list of features
-  CvPoint2D32f* getPrevFeatures() const {return prev_features;}
-  //! Get the list of features id
-  long* getPrevFeaturesId() const {return prev_featuresid;}
-  //! Get the current number of features
-  int getNbFeatures() const { return countFeatures; }
-  //! Get the previous number of features
-  int getNbPrevFeatures() const { return countPrevFeatures; }
-  //! Get Max number of features
-  int getMaxFeatures() const {return maxFeatures;}
+    \warning The tracker must be re-initialised using the method initTracking().
 
-  void getFeature(int index, int &id, float &x, float &y) const;
-  void getPrevFeature(int index, int &id, float &x, float &y) const;
-  void addFeature(const int &id, const float &x, const float &y);
+    \param input : The new maximal pyramid level.
+  */
+  void setPyramidLevels(const int input) {initialized = 0; pyramid_level=input;}
+  void setQuality(double input) {initialized = 0; quality=input;}
+  void setTrackerId(int tid) {_tid = tid;}
+  /*!
+    Set the window size for the sub-pixel computation.
+
+    \warning The tracker must be re-initialised using the method initTracking().
+
+    \param input : The new number of maximum features.
+  */
+  void setUseHarris(const int input) {initialized = 0; use_harris=input;}
+  void setWindowSize(const int input) {initialized = 0; win_size=input;}
+
   void suppressFeature(int index);
   
 //Static Functions
 public: 
-  static void display(const vpImage<unsigned char>& I,const CvPoint2D32f* features_list, 
-		      const int &nbFeatures, vpColor color = vpColor::green, 
-		      unsigned int thickness=1);
-  
-  static void display(const vpImage<unsigned char>& I,const CvPoint2D32f* features_list, 
-		      const long *featuresid_list, const int &nbFeatures, 
-		      vpColor color = vpColor::green, unsigned int thickness=1);
-  
+  static void display(const vpImage<unsigned char>& I, const CvPoint2D32f* features_list,
+                      const int &nbFeatures, vpColor color = vpColor::green,
+                      unsigned int thickness=1);
+  static void display(const vpImage<vpRGBa>& I, const CvPoint2D32f* features_list,
+                      const int &nbFeatures, vpColor color = vpColor::green,
+                      unsigned int thickness=1);
+
+  static void display(const vpImage<unsigned char>& I, const CvPoint2D32f* features_list,
+                      const long *featuresid_list, const int &nbFeatures,
+                      vpColor color = vpColor::green, unsigned int thickness=1);
+  static void display(const vpImage<vpRGBa>& I, const CvPoint2D32f* features_list,
+                      const long *featuresid_list, const int &nbFeatures,
+                      vpColor color = vpColor::green, unsigned int thickness=1);
+
 };
 
 #endif

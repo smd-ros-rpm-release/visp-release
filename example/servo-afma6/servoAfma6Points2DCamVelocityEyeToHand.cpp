@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: servoAfma6Points2DCamVelocityEyeToHand.cpp 3668 2012-04-04 09:07:10Z fspindle $
+ * $Id: servoAfma6Points2DCamVelocityEyeToHand.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -89,6 +89,8 @@
 #include <visp/vpImageIo.h>
 #include <visp/vpDisplay.h>
 #include <visp/vpDisplayX.h>
+#include <visp/vpDisplayOpenCV.h>
+#include <visp/vpDisplayGTK.h>
 
 #define L 0.006
 #define D 0
@@ -110,7 +112,13 @@ int main()
 
     g.acquire(I) ;
 
-    vpDisplayX display(I,100,100,"Servo") ;
+#ifdef VISP_HAVE_X11
+    vpDisplayX display(I,100,100,"Current image") ;
+#elif defined(VISP_HAVE_OPENCV)
+    vpDisplayOpenCV display(I,100,100,"Current image") ;
+#elif defined(VISP_HAVE_GTK)
+    vpDisplayGTK display(I,100,100,"Current image") ;
+#endif
 
     vpDisplay::display(I) ;
     vpDisplay::flush(I) ;
@@ -386,7 +394,7 @@ int main()
 
 	      vpDisplay::getImage(I,Ic) ;
 	      sprintf(name,"/tmp/marchand/image.%04d.ppm",it++) ;
-	      vpImageIo::writePPM(Ic,name) ;
+        vpImageIo::write(Ic,name) ;
 	    }
     }
     v = 0 ;

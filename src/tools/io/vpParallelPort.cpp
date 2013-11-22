@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpParallelPort.cpp 3723 2012-05-10 13:28:16Z fspindle $
+ * $Id: vpParallelPort.cpp 4317 2013-07-17 09:40:17Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,7 +63,7 @@ static unsigned char vpParallelPortData;
 
 /*!
 
-  Contructor to acces to a parallel port.
+  Constructor to acces to a parallel port.
 
   Open and initialise the parallel port by sending 0 to the data bus.
 

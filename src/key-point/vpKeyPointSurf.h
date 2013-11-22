@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpKeyPointSurf.h 3730 2012-05-14 17:09:58Z fspindle $
+ * $Id: vpKeyPointSurf.h 4201 2013-04-08 08:20:47Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@
 #include <list>
 #include <vector>
 
-#if defined (VISP_HAVE_OPENCV) 
+#if defined (VISP_HAVE_OPENCV_NONFREE)
 
 
 #if (VISP_HAVE_OPENCV_VERSION >= 0x020400) // Require opencv >= 2.4.0
@@ -90,7 +90,7 @@
   2006.
 
   If you use this class the first things you have to do is to create
-  the reference thanks to a refrence image which contains the
+  the reference thanks to a reference image which contains the
   interesting object to detect. Then you have to grab other images
   containing the object. After calling the specific method to match
   points you can access to the lists of matched points thanks to the
@@ -108,14 +108,14 @@
 #if VISP_HAVE_OPENCV_VERSION >= 0x010100 // Surf key-points only available since OpenCV-1.1.0
 int main()
 {
-  vpImage<unsigned char> Irefrence;
+  vpImage<unsigned char> Ireference;
   vpImage<unsigned char> Icurrent;
   vpKeyPointSurf surf;
 
-  //First grab the reference image Irefrence
+  //First grab the reference image Ireference
 
   //Build the reference SURF points.
-  surf.buildReference(Irefrence);
+  surf.buildReference(Ireference);
 
   //Then grab another image which represents the current image Icurrent
 
@@ -123,7 +123,7 @@ int main()
   surf.matchPoint(Icurrent);
 
   //Display the matched points
-  surf.display(Irefrence, Icurrent);
+  surf.display(Ireference, Icurrent);
 
   return (0);
 }
@@ -132,7 +132,7 @@ int main() {}
 #endif
   \endcode
 
-  It is also possible to create the refernece thanks to only a part of the
+  It is also possible to create the reference thanks to only a part of the
   reference image (not the whole image) and find points to match in only a
   part of the current image. The small following example shows how to this
 
@@ -149,7 +149,7 @@ int main()
   vpImage<unsigned char> Icurrent;
   vpKeyPointSurf surf;
 
-  //First grab the reference image Irefrence
+  //First grab the reference image Ireference
 
   //Select a part of the image by clincking on two points which define a rectangle
   vpImagePoint corners[2];
@@ -310,9 +310,4 @@ class VISP_EXPORT vpKeyPointSurf : public vpBasicKeyPoint
 
 #endif
 
-/*
- * Local variables:
- * c-basic-offset: 4
- * End:
- */
 

@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpDisplayGTK.h 3590 2012-03-05 09:48:31Z ayol $
+ * $Id: vpDisplayGTK.h 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,10 +44,10 @@
 #define vpDisplayGTK_h
 
 #include <visp/vpConfig.h>
+#include <visp/vpDisplay.h>
 #if ( defined(VISP_HAVE_GTK) )
 
 #include <visp/vpImage.h>
-#include <visp/vpDisplay.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkrgb.h>
@@ -84,9 +84,9 @@ int main()
 
   // Read an image in PGM P5 format
 #ifdef UNIX
-  vpImageIo::readPGM(I, "/local/soft/ViSP/ViSP-images/Klimt/Klimt.pgm");
+  vpImageIo::read(I, "/local/soft/ViSP/ViSP-images/Klimt/Klimt.pgm");
 #elif WIN32
-  vpImageIo::readPGM(I, "C:/temp/ViSP-images/Klimt/Klimt.pgm");
+  vpImageIo::read(I, "C:/temp/ViSP-images/Klimt/Klimt.pgm");
 #endif
 
   vpDisplayGTK d; 
@@ -156,7 +156,6 @@ private:
 
   GdkFont *Police1,*Police2;
   guchar  *vectgtk;
-  int windowXPosition ; int  windowYPosition ;
   GdkColor **col ;
   int ncol, nrow ;
 

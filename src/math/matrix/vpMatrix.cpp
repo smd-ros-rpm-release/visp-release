@@ -1,9 +1,9 @@
 /****************************************************************************
 *
-* $Id: vpMatrix.cpp 3735 2012-05-17 15:58:40Z fspindle $
+* $Id: vpMatrix.cpp 4210 2013-04-16 08:57:46Z fspindle $
 *
 * This file is part of the ViSP software.
-* Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+* Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
 * 
 * This software is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -201,6 +201,7 @@ void vpMatrix::resize(const unsigned int nrows, const unsigned int ncols,
     this->data = (double*)realloc(this->data, this->dsize*sizeof(double));
     if ((NULL == this->data) && (0 != this->dsize))
     {
+      if (copyTmp != NULL) delete [] copyTmp;
       vpERROR_TRACE("\n\t\tMemory allocation error when allocating data") ;
       throw(vpException(vpException::memoryAllocationError,
         "\n\t\t Memory allocation error when "
@@ -212,6 +213,7 @@ void vpMatrix::resize(const unsigned int nrows, const unsigned int ncols,
     this->rowPtrs = (double**)realloc (this->rowPtrs, this->trsize*sizeof(double*));
     if ((NULL == this->rowPtrs) && (0 != this->dsize))
     {
+      if (copyTmp != NULL) delete [] copyTmp;
       vpERROR_TRACE("\n\t\tMemory allocation error when allocating rowPtrs") ;
       throw(vpException(vpException::memoryAllocationError,
         "\n\t\t Memory allocation error when "
@@ -1706,7 +1708,7 @@ vpMatrix::svd(vpColVector& w, vpMatrix& v)
 
 #if defined (VISP_HAVE_LAPACK)
     svdLapack(w,v);
-#elif (VISP_HAVE_OPENCV_VERSION >= 0x020100) // Require opencv >= 2.1.0
+#elif (VISP_HAVE_OPENCV_VERSION >= 0x020101) // Require opencv >= 2.1.1
     svdOpenCV(w,v);
 #elif defined (VISP_HAVE_GSL)  /* be careful of the copy below */
     svdGsl(w,v) ;
@@ -2718,6 +2720,35 @@ matlabPrint(std::ostream & os)
   }
   return os;
 };
+
+/*!
+\brief Print using MAPLE matrix input format.
+
+Print using the following way so that this output can be directly copied into MAPLE:
+([
+[0.939846, 0.0300754, 0.340272, ],
+[0.0300788, 0.984961, -0.170136, ],
+[-0.340272, 0.170136, 0.924807, ],
+])
+*/
+std::ostream & vpMatrix::
+maplePrint(std::ostream & os)
+{
+  unsigned int i,j;
+
+  os << "([ " << std::endl;
+  for (i=0; i < this->getRows(); ++ i)
+  { os << "[";
+    for (j=0; j < this->getCols(); ++ j)
+    {
+      os <<  (*this)[i][j] << ", ";
+    }
+    os << "]," << std::endl;
+  }
+   os << "])" << std::endl;
+  return os;
+};
+
 
 /*!
 \brief Print to be used as part of a C++ code later.

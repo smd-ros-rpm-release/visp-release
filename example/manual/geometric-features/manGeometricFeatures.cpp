@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: manGeometricFeatures.cpp 3619 2012-03-09 17:28:57Z fspindle $
+ * $Id: manGeometricFeatures.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -134,7 +134,7 @@ int main()
   vpImage<vpRGBa> Ic;
   vpDisplay::getImage(I,Ic);
   std::cout << "ViSP creates \"./geometricFeatures.ppm\" B&W image "<< std::endl;
-  vpImageIo::writePPM(Ic, "./geometricFeatures.ppm");
+  vpImageIo::write(Ic, "./geometricFeatures.ppm");
 
 #endif
   return 0;

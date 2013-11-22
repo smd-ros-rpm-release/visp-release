@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpViper850.cpp 3842 2012-07-13 22:21:42Z fspindle $
+ * $Id: vpViper850.cpp 4210 2013-04-16 08:57:46Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -430,7 +430,6 @@ vpViper850::parseConfigFile (const char * filename)
   {
     vpERROR_TRACE ("Impossible to read the config file %s.",
                    filename);
-    fclose(fdtask);
     throw vpRobotException (vpRobotException::readingParametersError,
                             "Impossible to read the config file.");
   }

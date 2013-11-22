@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: testIoPGM.cpp 3619 2012-03-09 17:28:57Z fspindle $
+ * $Id: testIoPGM.cpp 4323 2013-07-18 09:24:01Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -166,10 +166,10 @@ main(int argc, const char ** argv)
     ipath = env_ipath;
 
   // Set the default output path
-#ifdef UNIX
+#ifdef WIN32
+  opt_opath = "C:/temp";
+#else
   opt_opath = "/tmp";
-#elif WIN32
-  opt_opath = "C:\\temp";
 #endif
 
   // Get the user login name
@@ -239,11 +239,11 @@ main(int argc, const char ** argv)
   // Load a grey image from the disk
   filename = ipath +  vpIoTools::path("/ViSP-images/Klimt/Klimt.pgm");
   std::cout << "Read image: " << filename << std::endl;
-  vpImageIo::readPGM(I, filename);
+  vpImageIo::read(I, filename);
   // Write the content of the image on the disk
   filename = opath +  vpIoTools::path("/Klimt_grey.pgm");
   std::cout << "Write image: " << filename << std::endl;
-  vpImageIo::writePGM(I, filename) ;
+  vpImageIo::write(I, filename) ;
 
   // Try to load a non existing image (test for exceptions)
   try
@@ -251,7 +251,7 @@ main(int argc, const char ** argv)
     // Load a non existing grey image
     filename = ipath +  vpIoTools::path("/ViSP-images/image-that-does-not-exist.pgm");
     std::cout << "Read image: " << filename << std::endl;
-    vpImageIo::readPGM(I, filename) ;
+    vpImageIo::read(I, filename) ;
   }
   catch(vpImageException e)
   {
@@ -264,7 +264,7 @@ main(int argc, const char ** argv)
   {
     filename = opath +  vpIoTools::path("/directory-that-does-not-exist/Klimt.pgm");
     std::cout << "Write image: " << filename << std::endl;
-    vpImageIo::writePGM(I, filename) ;
+    vpImageIo::write(I, filename) ;
   }
   catch(vpImageException e)
   {

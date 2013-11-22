@@ -1,9 +1,9 @@
 /****************************************************************************
  *
- * $Id: vpRequest.h 3820 2012-06-27 13:13:29Z fspindle $
+ * $Id: vpRequest.h 4303 2013-07-04 14:14:00Z fspindle $
  *
  * This file is part of the ViSP software.
- * Copyright (C) 2005 - 2012 by INRIA. All rights reserved.
+ * Copyright (C) 2005 - 2013 by INRIA. All rights reserved.
  * 
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -203,7 +203,7 @@ public:
     
     \return Number of parameters.
   */
-  unsigned int  size(){ return listOfParams.size(); }
+  unsigned int  size(){ return (unsigned int)listOfParams.size(); }
 };
 
 
