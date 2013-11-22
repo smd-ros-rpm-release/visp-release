@@ -1,3 +1,22 @@
+## visp - 2.8.0-2
+
+User `fspindle@meteosat` released the packages in the `visp` repository by running `/usr/bin/bloom-release --rosdistro groovy --track groovy visp --edit` on `Fri, 22 Nov 2013 14:30:27 -0000`
+
+The `visp` package was released.
+
+Version of package(s) in repository `visp`:
+- rosdistro version: `2.6.2-1`
+- old version: `2.8.0-1`
+- new version: `2.8.0-2`
+
+Versions of tools used:
+- bloom version: `0.4.4`
+- catkin_pkg version: `0.1.23`
+- rosdep version: `0.10.24`
+- rosdistro version: `0.2.17`
+- vcstools version: `0.1.32`
+
+
 ## visp - 2.8.0-5
 
 User `fspindle@meteosat` released the packages in the `visp` repository by running `/usr/bin/bloom-release --rosdistro hydro --track hydro visp --edit` on `Fri, 22 Nov 2013 14:08:52 -0000`
