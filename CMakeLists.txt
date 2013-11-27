@@ -133,7 +133,7 @@ endif()
 #--------------------------------------------------------------------
 
 # Choose static or shared libraries.
-OPTION(BUILD_SHARED_LIBS "Build ViSP shared libraries (.dll/.so) instead of static ones (.lib/.a)." ON)
+OPTION(BUILD_SHARED_LIBS "Build ViSP shared libraries (.dll/.so) instead of static ones (.lib/.a)." OFF)
 # Build examples as an option.
 OPTION(BUILD_EXAMPLES "Build ViSP examples." ON)
 # Build demos as an option.
