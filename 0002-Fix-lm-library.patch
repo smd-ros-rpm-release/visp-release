@@ -1,4 +1,4 @@
-From 662feccc5485ac7cb7e7973773784d693ff0eb24 Mon Sep 17 00:00:00 2001
+From 453320170d599805ad2a4d3063814c9e3bb8a96f Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Fri, 6 Dec 2013 17:20:58 +0100
 Subject: [PATCH 2/4] Fix -lm library

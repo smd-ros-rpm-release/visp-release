@@ -1,4 +1,4 @@
-From a9db569ea4504dd8e4f08c66262b8b32b57badc2 Mon Sep 17 00:00:00 2001
+From b65159c68796ba095c5ff5c61faf627d4df41725 Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Fri, 6 Dec 2013 17:24:06 +0100
 Subject: [PATCH 4/4] Build shared lib
