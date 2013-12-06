@@ -1,7 +1,7 @@
 From 662feccc5485ac7cb7e7973773784d693ff0eb24 Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Fri, 6 Dec 2013 17:20:58 +0100
-Subject: [PATCH 2/3] Fix -lm library
+Subject: [PATCH 2/4] Fix -lm library
 
 ---
  CMakeLists.txt | 2 +-
