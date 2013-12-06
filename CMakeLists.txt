@@ -2133,7 +2133,7 @@ install(FILES package.xml DESTINATION share/visp)
 # We use CDash set through CTestConfig.cmake file
 # Dashboards are sent to http://cdash.irisa.fr/CDash/index.php?project=ViSP
 #----------------------------------------------------------------------
-ENABLE_TESTING()
+#ENABLE_TESTING()
 INCLUDE(Dart)
 MARK_AS_ADVANCED(DART_ROOT)
 
