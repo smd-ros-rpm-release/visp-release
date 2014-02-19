@@ -1,5 +1,24 @@
 ## visp - 2.9.0-2
 
+User `fspindle@lagadic` released the packages in the `visp` repository by running `/usr/bin/bloom-release visp --rosdistro groovy --track groovy --edit` on `Wed, 19 Feb 2014 16:00:03 -0000`
+
+The `visp` package was released.
+
+Version of package(s) in repository `visp`:
+- rosdistro version: `2.8.0-4`
+- old version: `2.9.0-1`
+- new version: `2.9.0-2`
+
+Versions of tools used:
+- bloom version: `0.4.9`
+- catkin_pkg version: `0.1.18`
+- rosdep version: `0.10.25`
+- rosdistro version: `0.3.4`
+- vcstools version: `0.1.32`
+
+
+## visp - 2.9.0-2
+
 User `fspindle@lagadic` released the packages in the `visp` repository by running `/usr/bin/bloom-release visp --rosdistro hydro --track hydro --edit` on `Wed, 19 Feb 2014 15:44:18 -0000`
 
 The `visp` package was released.
