@@ -36,7 +36,7 @@ tracks:
     release_tag: null
     ros_distro: groovy
     vcs_type: svn
-    vcs_uri: svn://scm.gforge.inria.fr/svnroot/visp/tags/ViSP_2_8_0
+    vcs_uri: svn://scm.gforge.inria.fr/svnroot/visp/tags/ViSP_2_9_0
     version: :{ask}
   hydro:
     actions:
