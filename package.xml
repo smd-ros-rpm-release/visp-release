@@ -11,14 +11,16 @@
     and computer animation.
   </description>
 
-  <maintainer email="thomas.moulard@gmail.com">Thomas Moulard</maintainer>
+  <author>Thomas Moulard</author>
+  <maintainer email="Fabien.Spindler@inria.fr">Fabien Spindler</maintainer>
   <license>GPLv2</license>
 
   <url type="website">http://www.ros.org/wiki/visp</url>
-  <url type="bugtracker">https://github.com/laas/visp-release/issues</url>
-  <url type="repository">https://github.com/laas/visp-release</url>
+  <url type="bugtracker">https://github.com/lagadic/visp-release/issues</url>
+  <url type="repository">https://github.com/lagadic/visp-release</url>
 
   <buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>doxygen</build_depend>
   <build_depend>opencv2</build_depend>
@@ -47,6 +49,7 @@
   <run_depend>libxml2</run_depend>
   <run_depend>libjpeg</run_depend>
   <run_depend>libpng12-dev</run_depend>
+  <run_depend>bzip2</run_depend>
   <run_depend>ffmpeg</run_depend>
   <run_depend>libx11-dev</run_depend>
   <run_depend>libv4l-dev</run_depend>
