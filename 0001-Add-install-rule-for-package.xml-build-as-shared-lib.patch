@@ -1,11 +1,11 @@
-From f14a5043aa4ae0f2b1898303cba3215f90bda970 Mon Sep 17 00:00:00 2001
+From 5642c96a9c91afc553a853aa98baab667f084006 Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Wed, 19 Feb 2014 16:30:47 +0100
 Subject: [PATCH] Add install rule for package.xml, build as shared lib,
  disable testing
 
 ---
- CMakeLists.txt |    9 +++++++--
+ CMakeLists.txt | 9 +++++++--
  1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
@@ -40,5 +40,5 @@ index 12157e1..30c81ac 100644
  MARK_AS_ADVANCED(DART_ROOT)
  
 -- 
-1.7.9.5
+1.8.3.2
 
