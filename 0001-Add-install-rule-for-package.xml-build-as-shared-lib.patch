@@ -1,4 +1,4 @@
-From 94600a6100e601277b869cdc373919fba85d6429 Mon Sep 17 00:00:00 2001
+From 15040567c4c0e44a1cf537eb00f8ff1f3d7308d8 Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Wed, 19 Feb 2014 16:30:47 +0100
 Subject: [PATCH] Add install rule for package.xml, build as shared lib,
@@ -40,5 +40,5 @@ index 12157e1..30c81ac 100644
  MARK_AS_ADVANCED(DART_ROOT)
  
 -- 
-1.8.3.2
+1.8.1.2
 
