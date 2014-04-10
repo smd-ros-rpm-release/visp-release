@@ -1,4 +1,4 @@
-From 15040567c4c0e44a1cf537eb00f8ff1f3d7308d8 Mon Sep 17 00:00:00 2001
+From 65ed10173bc7ef291c28b4672d57d8b96d9e18a5 Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Wed, 19 Feb 2014 16:30:47 +0100
 Subject: [PATCH] Add install rule for package.xml, build as shared lib,
