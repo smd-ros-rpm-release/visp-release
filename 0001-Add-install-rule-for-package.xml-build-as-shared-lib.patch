@@ -1,7 +1,7 @@
-From a1cba55879d5f3df2343809cf5e843006a5d768b Mon Sep 17 00:00:00 2001
+From 315f4e018963c71f6ef1ce6ad7bba0f2eecd30e2 Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Wed, 19 Feb 2014 16:30:47 +0100
-Subject: [PATCH] Add install rule for package.xml, build as shared lib,
+Subject: [PATCH 1/2] Add install rule for package.xml, build as shared lib,
  disable testing
 
 ---
