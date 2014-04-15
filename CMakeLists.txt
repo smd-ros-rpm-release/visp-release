@@ -56,6 +56,7 @@ set(VISP_CMAKE_MODULE_PATH ${VISP_SOURCE_DIR}/CMakeModules)
 
 find_file(GNU_INSTALL_DIRS_FROM_CMAKE ${CMAKE_ROOT}/Modules/GNUInstallDirs.cmake)
 mark_as_advanced(GNU_INSTALL_DIRS_FROM_CMAKE)
+set(CMAKE_INSTALL_LIBDIR lib)
 if(GNU_INSTALL_DIRS_FROM_CMAKE)
   include(${CMAKE_ROOT}/Modules/GNUInstallDirs.cmake)
 else()
