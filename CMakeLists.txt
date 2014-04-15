@@ -56,7 +56,6 @@ set(VISP_CMAKE_MODULE_PATH ${VISP_SOURCE_DIR}/CMakeModules)
 
 find_file(GNU_INSTALL_DIRS_FROM_CMAKE ${CMAKE_ROOT}/Modules/GNUInstallDirs.cmake)
 mark_as_advanced(GNU_INSTALL_DIRS_FROM_CMAKE)
-set(CMAKE_INSTALL_LIBDIR lib)
 if(GNU_INSTALL_DIRS_FROM_CMAKE)
   include(${CMAKE_ROOT}/Modules/GNUInstallDirs.cmake)
 else()
@@ -134,7 +133,7 @@ endif()
 #--------------------------------------------------------------------
 
 # Choose static or shared libraries.
-OPTION(BUILD_SHARED_LIBS "Build ViSP shared libraries (.dll/.so) instead of static ones (.lib/.a)." ON)
+OPTION(BUILD_SHARED_LIBS "Build ViSP shared libraries (.dll/.so) instead of static ones (.lib/.a)." OFF)
 # Build examples as an option.
 OPTION(BUILD_EXAMPLES "Build ViSP examples." ON)
 # Build demos as an option.
@@ -2198,16 +2197,11 @@ ELSE()
 ENDIF()
 
 #----------------------------------------------------------------------
-# Install catkin package.xml
-#----------------------------------------------------------------------
-install(FILES package.xml DESTINATION share/visp)
-
-#----------------------------------------------------------------------
 # For Dart server and tests 
 # We use CDash set through CTestConfig.cmake file
 # Dashboards are sent to http://cdash.irisa.fr/CDash/index.php?project=ViSP
 #----------------------------------------------------------------------
-#ENABLE_TESTING()
+ENABLE_TESTING()
 INCLUDE(Dart)
 MARK_AS_ADVANCED(DART_ROOT)
 
