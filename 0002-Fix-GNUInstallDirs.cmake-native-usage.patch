@@ -1,0 +1,25 @@
+From b2316b7e47b6811110ab7e72545a0cece6ca21b3 Mon Sep 17 00:00:00 2001
+From: Fabien Spindler <Fabien.Spindler@inria.fr>
+Date: Wed, 16 Apr 2014 10:23:58 +0200
+Subject: [PATCH 2/2] Fix GNUInstallDirs.cmake native usage
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 30c81ac..088dcb2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,7 +54,7 @@ SET(VISP_REVISION "1")
+ # where are user-specific cmake modules
+ set(VISP_CMAKE_MODULE_PATH ${VISP_SOURCE_DIR}/CMakeModules)
+ 
+-find_file(GNU_INSTALL_DIRS_FROM_CMAKE ${CMAKE_ROOT}/Modules/GNUInstallDirs.cmake)
++find_file(GNU_INSTALL_DIRS_FROM_CMAKE NAMES GNUInstallDirs.cmake PATHS ${CMAKE_ROOT}/Modules)
+ mark_as_advanced(GNU_INSTALL_DIRS_FROM_CMAKE)
+ if(GNU_INSTALL_DIRS_FROM_CMAKE)
+   include(${CMAKE_ROOT}/Modules/GNUInstallDirs.cmake)
+-- 
+1.8.1.2
+
