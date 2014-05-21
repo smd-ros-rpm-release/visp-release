@@ -1,3 +1,22 @@
+## visp (indigo) - 2.9.0-11
+
+The packages in the `visp` repository were released into the `indigo` distro by running `/usr/bin/bloom-release visp --rosdistro indigo --track indigo` on `Wed, 21 May 2014 16:13:39 -0000`
+
+The `visp` package was released.
+
+Version of package(s) in repository `visp`:
+- rosdistro version: `2.9.0-10`
+- old version: `2.9.0-10`
+- new version: `2.9.0-11`
+
+Versions of tools used:
+- bloom version: `0.5.8`
+- catkin_pkg version: `0.2.2`
+- rosdep version: `0.10.27`
+- rosdistro version: `0.3.5`
+- vcstools version: `0.1.35`
+
+
 ## visp (indigo) - 2.9.0-10
 
 The packages in the `visp` repository were released into the `indigo` distro by running `/usr/local/bin/bloom-release visp --rosdistro indigo --track indigo` on `Thu, 17 Apr 2014 09:25:37 -0000`
