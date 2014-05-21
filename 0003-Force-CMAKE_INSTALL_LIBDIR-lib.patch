@@ -1,4 +1,4 @@
-From 4cc93d587b03eba60dc4a39b7d1c59c23080c562 Mon Sep 17 00:00:00 2001
+From 5b183768926afef35df2dabd74f114d4dba7c816 Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Thu, 17 Apr 2014 11:22:45 +0200
 Subject: [PATCH 3/3] Force CMAKE_INSTALL_LIBDIR=lib
@@ -20,5 +20,5 @@ index 088dcb2..eeb07f7 100644
    include(${CMAKE_ROOT}/Modules/GNUInstallDirs.cmake)
  else()
 -- 
-1.8.1.2
+1.9.1
 

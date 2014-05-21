@@ -1,4 +1,4 @@
-From d63bcfd928f7f0863e004f1bab2cda2634024141 Mon Sep 17 00:00:00 2001
+From 042d2e1669f9d963169f0946ff80462d5c8adac5 Mon Sep 17 00:00:00 2001
 From: Fabien Spindler <Fabien.Spindler@inria.fr>
 Date: Wed, 16 Apr 2014 10:23:58 +0200
 Subject: [PATCH 2/3] Fix GNUInstallDirs.cmake native usage
@@ -21,5 +21,5 @@ index 30c81ac..088dcb2 100644
  if(GNU_INSTALL_DIRS_FROM_CMAKE)
    include(${CMAKE_ROOT}/Modules/GNUInstallDirs.cmake)
 -- 
-1.8.1.2
+1.9.1
 
